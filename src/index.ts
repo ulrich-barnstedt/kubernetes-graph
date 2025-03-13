@@ -1,12 +1,15 @@
 import express from "express";
 import * as path from "node:path";
-import graphAPI from "./graphAPI";
+import {constructAggregatedGraph} from "./aggregator/aggregate";
 
 const app = express();
 
-app.use("/api", graphAPI);
-app.use(express.static("static"));
+app.get("/graph", async (req, res) => {
+    const graph = await constructAggregatedGraph();
+    res.send(graph);
+})
 
+app.use(express.static("static"));
 const index = path.resolve("static/index.html");
 app.get("/", (req, res) => {
    res.sendFile(index);

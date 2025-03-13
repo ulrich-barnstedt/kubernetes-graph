@@ -1,10 +1,17 @@
+import {KubernetesObject} from "@kubernetes/client-node";
+
 export class Node {
     public readonly id: string;
+    public readonly kind: string;
+    public readonly kubeObj: KubernetesObject;
     public readonly outgoing: Relation[];
     public readonly incoming: Relation[];
 
-    constructor(id: string) {
-        this.id = id;
+    constructor (kubeObj: KubernetesObject) {
+        this.kubeObj = kubeObj;
+        this.id = kubeObj.metadata.uid;
+        this.kind = kubeObj.constructor.name;
+
         this.incoming = [];
         this.outgoing = [];
     }
@@ -37,15 +44,14 @@ export class Graph {
         return Object.values(this.nodes);
     }
 
-    public createNode (id: string) : Node {
-        if (id in this.nodes) {
-            return;
+    public addNodes (...nodes: Node[]) {
+        for (const node of nodes) {
+            if (node.id in this.nodes) {
+                return;
+            }
+
+            this.nodes[node.id] = node;
         }
-
-        const node = new Node(id);
-        this.nodes[id] = node;
-
-        return node;
     }
 
     public createRelation (from: Node, to: Node) : Relation {

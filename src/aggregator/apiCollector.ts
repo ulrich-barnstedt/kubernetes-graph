@@ -39,7 +39,7 @@ const parallelizeValues = async <T extends Record<string, Promise<any>>> (obj: T
     return Object.fromEntries(keys.map(((k, idx) => [k, results[idx]])));
 }
 
-export const collectData = async () => {
+export const fetchClusterData = async () => {
     const data: ClusterData = await parallelizeValues({
         deployments: kube.apps.listDeploymentForAllNamespaces(),
         pods: kube.core.listPodForAllNamespaces(),
