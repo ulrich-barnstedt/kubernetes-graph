@@ -5,13 +5,25 @@
     <link rel="icon" href="favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>KubeD3</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .fill {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body>
-<div id="app">
-    <div id="root">
-
+    <div id="app" class="fill">
+        <div id="container" class="fill"></div>
     </div>
-</div>
-<script type="module" src="/src/client/index.ts"></script>
+    <script type="module" src="/src/client/index.ts"></script>
 </body>
 </html>
