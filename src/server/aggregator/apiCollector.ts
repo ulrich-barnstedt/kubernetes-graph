@@ -9,6 +9,12 @@ import {
     V1ServiceList, V1StatefulSetList
 } from "@kubernetes/client-node";
 
+type ValueOf<T> = T[keyof T];
+type PromiseValues = Record<string, Promise<any>>;
+type AwaitedValues<T extends PromiseValues> = {
+    [key in keyof T]: Awaited<T[key]>
+}
+
 export interface ClusterData {
     deployments: V1DeploymentList;
     pods: V1PodList;
@@ -24,11 +30,8 @@ export interface ClusterData {
     jobs: V1JobList
 }
 
-type AwaitedValues<T extends Record<string, Promise<any>>> = {
-    [key in keyof T]: Awaited<T[key]>
-}
-const parallelizeValues = async <T extends Record<string, Promise<any>>> (obj: T): Promise<AwaitedValues<T>> => {
-    const [keys, promises] = Object.entries(obj).reduce<[string[], Promise<any>[]]>((acc, val) => {
+const parallelizeValues = async <T extends PromiseValues> (obj: T): Promise<AwaitedValues<T>> => {
+    const [keys, promises] = Object.entries(obj).reduce<[(keyof T)[], Promise<ValueOf<T>>[]]>((acc, val) => {
         acc[0].push(val[0]);
         acc[1].push(val[1]);
 
@@ -36,7 +39,11 @@ const parallelizeValues = async <T extends Record<string, Promise<any>>> (obj: T
     }, [[], []]);
 
     const results = await Promise.all(promises);
-    return Object.fromEntries(keys.map(((k, idx) => [k, results[idx]])));
+    return Object.fromEntries(
+        keys.map(
+            (k, idx) => [k, results[idx]]
+        )
+    ) as AwaitedValues<T>;
 }
 
 export const fetchClusterData = async () => {

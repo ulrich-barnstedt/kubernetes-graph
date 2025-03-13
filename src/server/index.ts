@@ -6,7 +6,7 @@ const app = express();
 
 app.get("/graph", async (_req, res) => {
     const graph = await constructAggregatedGraph();
-    res.send(graph.flatSerialize());
+    res.send(graph);
 })
 
 ViteExpress.listen(app, 8000, () =>
