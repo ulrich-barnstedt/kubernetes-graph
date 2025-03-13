@@ -5,9 +5,14 @@ export class Graph {
     private readonly nodes: Record<string, GraphNode>;
     private readonly relations: GraphRelation[];
 
-    constructor() {
-        this.nodes = {};
-        this.relations = [];
+
+    constructor (nodes: Record<string, GraphNode> = {}, relations: GraphRelation[] = []) {
+        this.nodes = nodes;
+        this.relations = relations;
+    }
+
+    static fromSerialized (data: Graph) : Graph {
+        return new Graph(data.nodes, data.relations);
     }
 
     public getNodeById (id: string) : GraphNode {
