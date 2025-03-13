@@ -28,7 +28,7 @@ type AwaitedValues<T extends Record<string, Promise<any>>> = {
     [key in keyof T]: Awaited<T[key]>
 }
 const parallelizeValues = async <T extends Record<string, Promise<any>>> (obj: T): Promise<AwaitedValues<T>> => {
-    const [keys, promises] = Object.entries(obj).reduce((acc, val) => {
+    const [keys, promises] = Object.entries(obj).reduce<[string[], Promise<any>[]]>((acc, val) => {
         acc[0].push(val[0]);
         acc[1].push(val[1]);
 

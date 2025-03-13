@@ -13,7 +13,7 @@ export class Node implements NonCircularSerializable {
 
     constructor (kubeObj: KubernetesObject) {
         this.kubeObj = kubeObj;
-        this.id = kubeObj.metadata.uid;
+        this.id = kubeObj.metadata!.uid!;
         this.kind = kubeObj.constructor.name;
 
         this.incoming = [];

@@ -1,6 +1,6 @@
-import k8s, {AppsV1Api, BatchV1Api, CoreV1Api} from "@kubernetes/client-node";
+import {AppsV1Api, BatchV1Api, CoreV1Api, KubeConfig} from "@kubernetes/client-node";
 
-export const kc = new k8s.KubeConfig();
+export const kc = new KubeConfig();
 kc.loadFromDefault();
 
 interface KubeClients {

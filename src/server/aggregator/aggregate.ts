@@ -10,10 +10,10 @@ export const constructAggregatedGraph = async () : Promise<Graph> => {
     graph.addNodes(...objects.map(o => new Node(o)));
 
     for (const obj of objects) {
-        if (!obj.metadata.ownerReferences) continue;
+        if (!obj.metadata!.ownerReferences) continue;
 
-        for (const ref of obj.metadata.ownerReferences) {
-            graph.createRelationByIds(obj.metadata.uid, ref.uid);
+        for (const ref of obj.metadata!.ownerReferences) {
+            graph.createRelationByIds(obj.metadata!.uid!, ref.uid);
         }
     }
 
