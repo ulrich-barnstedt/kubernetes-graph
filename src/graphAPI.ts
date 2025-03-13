@@ -1,10 +1,10 @@
 import express from "express";
-import {collectPods} from "./aggregate";
+import {collectData} from "./aggregator/aggregate";
 
 const router = express.Router();
 
 router.get("/graph", async (req, res) => {
-    res.send(await collectPods());
+    res.send(await collectData());
 })
 
 export default router;
