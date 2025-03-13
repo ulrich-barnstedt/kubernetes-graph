@@ -1,5 +1,5 @@
-import {Graph, Node} from "./Graph";
-import {fetchClusterData} from "./apiCollector";
+import {Graph, Node} from "./Graph.js";
+import {fetchClusterData} from "./apiCollector.js";
 import {KubernetesObject} from "@kubernetes/client-node";
 
 export const constructAggregatedGraph = async () : Promise<Graph> => {

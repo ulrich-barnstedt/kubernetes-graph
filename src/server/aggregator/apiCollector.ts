@@ -1,4 +1,4 @@
-import {kube} from "../k8sClient";
+import {kube} from "../k8sClient.js";
 import {
     V1DaemonSetList,
     V1DeploymentList, V1Endpoints, V1JobList,

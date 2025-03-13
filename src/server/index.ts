@@ -1,6 +1,6 @@
 import express from "express";
 import * as path from "node:path";
-import {constructAggregatedGraph} from "./aggregator/aggregate";
+import {constructAggregatedGraph} from "./aggregator/aggregate.js";
 
 const app = express();
 
