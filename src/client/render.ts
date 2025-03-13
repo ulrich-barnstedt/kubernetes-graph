@@ -43,11 +43,20 @@ export const drawNetwork = (graph: Graph) => {
         .attr("stroke-width", 0.8)
         .selectAll()
         .data(nodes)
-        .join("circle")
+        .join("g")
+    node.append("circle")
         .attr("r", 7)
         .attr("fill", d => color(d.kind));
+    node.append("text")
+        .text(d => d.kubeObj.metadata?.name!)
+        .attr("font-family", "Arial")
+        .attr("fill", "white")
+        .attr("font-size", "5px")
+        .attr("stroke-width", 0)
     node.append("title")
-        .text(d => d.id);
+        .text(d => d.id + "   " + d.kind + "   " + d.kubeObj.metadata?.name!);
+
+    // TODO: fix: proper label rendering / layout
 
     d3.forceSimulation(nodes)
         .force("link", d3.forceLink(links).id(d => d.id))
@@ -62,7 +71,6 @@ export const drawNetwork = (graph: Graph) => {
                 .attr("x2", d => d.target.x)
                 .attr("y2", d => d.target.y);
 
-            node.attr("cx", d => d.x)
-                .attr("cy", d => d.y);
+            node.attr("transform", d => `translate(${d.x}, ${d.y})`);
         });
 }
