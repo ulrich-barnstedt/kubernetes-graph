@@ -1,5 +1,4 @@
 import {KubernetesObject} from "@kubernetes/client-node";
-import {from} from "@kubernetes/client-node/dist/gen/rxjsStub";
 
 export interface NonCircularSerializable {
     flatSerialize () : object;
