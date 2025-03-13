@@ -6,7 +6,7 @@ const app = express();
 
 app.get("/graph", async (req, res) => {
     const graph = await constructAggregatedGraph();
-    res.send(graph);
+    res.send(graph.flatSerialize());
 })
 
 app.use(express.static("static"));

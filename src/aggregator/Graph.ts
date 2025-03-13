@@ -1,6 +1,11 @@
 import {KubernetesObject} from "@kubernetes/client-node";
+import {from} from "@kubernetes/client-node/dist/gen/rxjsStub";
 
-export class Node {
+export interface NonCircularSerializable {
+    flatSerialize () : object;
+}
+
+export class Node implements NonCircularSerializable {
     public readonly id: string;
     public readonly kind: string;
     public readonly kubeObj: KubernetesObject;
@@ -15,9 +20,20 @@ export class Node {
         this.incoming = [];
         this.outgoing = [];
     }
+
+    flatSerialize() {
+        return {
+            id: this.id,
+            kind: this.kind,
+            kubeObj: this.kubeObj,
+            outgoing: this.outgoing.map(r => r.to.id),
+            incoming: this.incoming.map(r => r.from.id)
+        }
+
+    }
 }
 
-export class Relation {
+export class Relation implements NonCircularSerializable {
     public readonly from: Node;
     public readonly to: Node;
 
@@ -25,9 +41,16 @@ export class Relation {
         this.from = from;
         this.to = to;
     }
+
+    flatSerialize() {
+        return {
+            from: this.from.id,
+            to: this.to.id
+        }
+    }
 }
 
-export class Graph {
+export class Graph implements NonCircularSerializable {
     private readonly nodes: Record<string, Node>;
     private readonly relations: Relation[];
 
@@ -61,6 +84,7 @@ export class Graph {
         );
         from.outgoing.push(relation);
         to.incoming.push(relation);
+        this.relations.push(relation);
 
         return relation;
     }
@@ -71,5 +95,12 @@ export class Graph {
 
     public getAllRelations () : Relation[] {
         return this.relations;
+    }
+
+    flatSerialize(): object {
+        return {
+            nodes: Object.fromEntries(Object.entries(this.nodes).map(([k, v]) => [k, v.flatSerialize()])),
+            relations: this.relations.map(r => r.flatSerialize())
+        };
     }
 }
