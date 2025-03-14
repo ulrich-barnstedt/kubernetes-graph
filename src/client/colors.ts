@@ -1,4 +1,4 @@
-const colors = [
+export const paletteLight = [
     "#2f4f4f",
     "#006400",
     "#000080",
@@ -16,16 +16,48 @@ const colors = [
     "#b0e0e6",
     "#ff1493",
 ];
-const colorMap: Record<string, string> = {};
-const defaultColor = "#000000";
+export const paletteDark = [
+    "#0000ff",
+    "#ff00ff",
+    "#00fa9a",
+    "#1e90ff",
+    "#dda0dd",
+    "#ff1493",
+    "#ffdab9",
+    "#696969",
+    "#a52a2a",
+    "#006400",
+    "#b8860b",
+    "#000080",
+    "#48d1cc",
+    "#ff0000",
+    "#ffff00",
+    "#00ff00",
+];
 
-export const getColor = (type: string) : string => {
-    if (type in colorMap) {
-        return colorMap[type];
-    } else if (colors.length > 0) {
-        colorMap[type] = colors.pop()!;
-        return colorMap[type];
-    } else {
-        return defaultColor;
+export class ColorMap {
+    private readonly colorList: string[];
+    private readonly colorMap: Record<string, string>;
+    private readonly defaultColor: string;
+
+    constructor (colorList: string[] = paletteLight, defaultColor: string = "#ffffff") {
+        this.defaultColor = defaultColor;
+        this.colorMap = {};
+        this.colorList = [...colorList];
+    }
+
+    public getColor (idx: string) : string {
+        if (idx in this.colorMap) {
+            return this.colorMap[idx];
+        } else if (this.colorList.length > 0) {
+            this.colorMap[idx] = this.colorList.pop()!;
+            return this.colorMap[idx];
+        } else {
+            return this.defaultColor;
+        }
+    }
+
+    public defineFixedColor (idx: string, color: string) {
+        this.colorMap[idx] = color;
     }
 }

@@ -1,9 +1,9 @@
 import {deserialize} from "@ungap/structured-clone";
 import {Graph} from "../shared/graph/Graph";
-import {getColor} from "./colors";
 import cytoscape from "cytoscape";
 import euler from 'cytoscape-euler';
 import cytoscapePopper from "cytoscape-popper";
+import {ColorMap, paletteDark, paletteLight} from "./colors";
 
 const getCurrentGraph = async () : Promise<Graph> => {
     const apiResponse = await fetch("/graph");
@@ -14,24 +14,32 @@ const getCurrentGraph = async () : Promise<Graph> => {
 
 const preprocessData = (graph: Graph) : {data: any}[] => {
     const elements = [];
+    const kindColorMap = new ColorMap(paletteLight);
+    const namespaceColorMap = new ColorMap(paletteDark);
+    namespaceColorMap.defineFixedColor("", "#ffffff");
 
     for (const node of graph.getAllNodes()) {
         elements.push({
             data: {
-                id: node.id,
                 name: node.kubeObj.metadata?.name!,
-                color: getColor(node.kind),
-                kind: node.kind,
-                kube: node.kubeObj
+                nodeColor: kindColorMap.getColor(node.kind),
+                ...node
             }
         })
     }
     for (const relation of graph.getAllRelations()) {
+        let isSameNamespace =
+            relation.from.kubeObj.metadata?.namespace! === relation.to.kubeObj.metadata?.namespace! ||
+            relation.to.kind === "V1Namespace" ||
+            relation.from.kind === "V1Namespace";
+        let namespace = relation.from.kubeObj.metadata?.namespace! || relation.to.kubeObj.metadata?.namespace!;
+
         elements.push({
             data: {
                 id: relation.from.id + "+" + relation.to.id,
                 source: relation.from.id,
-                target: relation.to.id
+                target: relation.to.id,
+                linkColor: isSameNamespace ? namespaceColorMap.getColor(namespace) : "white"
             }
         })
     }
@@ -43,6 +51,14 @@ const preprocessData = (graph: Graph) : {data: any}[] => {
     const apiGraph = await getCurrentGraph();
     const transformedData = preprocessData(apiGraph);
 
+    // const noneList = [];
+    // for (const node of apiGraph.getAllNodes()) {
+    //     if (node.outgoing.length === 0 && node.incoming.length === 0) {
+    //         noneList.push(node);
+    //     }
+    // }
+    // console.log(noneList);
+
     cytoscape.use(euler);
     // cytoscape.use(cytoscapePopper(tippyFactory));
 
@@ -53,13 +69,33 @@ const preprocessData = (graph: Graph) : {data: any}[] => {
             {
                 selector: 'node',
                 style: {
-                    'background-color': 'data(color)',
-                    label: 'data(name)'
+                    'background-color': 'data(nodeColor)',
+                    label: 'data(name)',
+                    color: "white",
+                }
+            },
+            {
+                selector: "edge",
+                style: {
+                    "line-color": "data(linkColor)"
                 }
             }
         ],
         layout: {
-            name: "euler"
+            name: "euler",
+            maxIterations: 4000,
+            maxSimulationTime: 4000,
+            springLength: _ => 120,
+            mass: node => {
+                const data = node.data();
+                const connections = data.incoming.length + data.outgoing.length;
+                const mass =
+                    ((connections === 0 ? 1 : connections) * 5) +
+                    (data.name.length * 0.5);
+
+                // WARNING: returning 0 will cause INFNITE ram usage
+                return mass > 0 ? mass : 1;
+            }
         },
         wheelSensitivity: 0.3,
         autoungrabify: true,
