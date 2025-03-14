@@ -14,6 +14,7 @@ const getCurrentGraph = async () : Promise<Graph> => {
 
 const preprocessData = (graph: Graph) : {data: any}[] => {
     const elements = [];
+    const types = new Set<string>();
 
     for (const node of graph.getAllNodes()) {
         elements.push({
@@ -25,6 +26,8 @@ const preprocessData = (graph: Graph) : {data: any}[] => {
                 kube: node.kubeObj
             }
         })
+
+        types.add(node.kind);
     }
     for (const relation of graph.getAllRelations()) {
         elements.push({
@@ -36,6 +39,7 @@ const preprocessData = (graph: Graph) : {data: any}[] => {
         })
     }
 
+    console.log(types);
     return elements;
 }
 
