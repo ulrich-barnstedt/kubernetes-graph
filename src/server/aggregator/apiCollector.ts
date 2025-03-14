@@ -1,7 +1,7 @@
 import {kube} from "../k8sClient.js";
 import {
     V1DaemonSetList,
-    V1DeploymentList, V1Endpoints, V1JobList,
+    V1DeploymentList, V1EndpointsList, V1JobList,
     V1NamespaceList,
     V1NodeList,
     V1PodList, V1ReplicaSet, V1ReplicationControllerList,
@@ -24,7 +24,7 @@ export interface ClusterData {
     serviceAccounts: V1ServiceAccountList,
     replicationControllers: V1ReplicationControllerList,
     replicaSets: V1ReplicaSet,
-    endpoints: V1Endpoints,
+    endpoints: V1EndpointsList,
     statefulSets: V1StatefulSetList,
     daemonSets: V1DaemonSetList,
     jobs: V1JobList
