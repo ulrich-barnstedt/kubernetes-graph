@@ -51,16 +51,23 @@ export const createRelations = async (
     }
 
     for (const endpoint of data.endpoints.items) {
-        if (!endpoint.subsets) continue;
+        graph.createRelationByIds(endpoint.metadata?.uid!, nameToIndex.namespace[endpoint.metadata?.namespace!]);
 
+        if (!endpoint.subsets) continue;
         for (const subset of endpoint.subsets) {
             const addresses = [
                 ...(subset.addresses ?? []),
                 ...(subset.notReadyAddresses ?? [])
             ]
             for (const address of addresses) {
-                if (!address.targetRef?.uid) continue;
-                graph.createRelationByIds(endpoint.metadata?.uid!, address.targetRef?.uid!);
+                if (address.targetRef?.uid) {
+                    graph.createRelationByIds(endpoint.metadata?.uid!, address.targetRef?.uid!);
+                } else {
+                    const pod = data.pods.items.find(pod => pod.status?.hostIP === address.ip);
+                    if (pod) {
+                        graph.createRelationByIds(endpoint.metadata?.uid!, pod.metadata?.uid!);
+                    }
+                }
             }
         }
     }

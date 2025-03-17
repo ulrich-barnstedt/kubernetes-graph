@@ -1,4 +1,5 @@
-import cytoscape from "cytoscape";
+import cytoscape, {NodeSingular} from "cytoscape";
+// @ts-ignore
 import euler from 'cytoscape-euler';
 import {getCurrentGraph, preprocessData} from "./graphData";
 import {setupOverlay} from "./overlay";
@@ -41,10 +42,11 @@ import {setupOverlay} from "./overlay";
         ],
         layout: {
             name: "euler",
+            // @ts-ignore
             maxIterations: 4000,
             maxSimulationTime: 4000,
-            springLength: _ => 120,
-            mass: node => {
+            springLength: () => 120,
+            mass: (node: NodeSingular)  => {
                 const data = node.data();
                 const connections = data.incoming.length + data.outgoing.length;
                 const mass =
