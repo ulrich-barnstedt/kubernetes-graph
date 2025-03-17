@@ -2,7 +2,6 @@ import {deserialize} from "@ungap/structured-clone";
 import {Graph} from "../shared/graph/Graph";
 import cytoscape from "cytoscape";
 import euler from 'cytoscape-euler';
-import cytoscapePopper from "cytoscape-popper";
 import {ColorMap, paletteDark, paletteLight} from "./colors";
 
 const getCurrentGraph = async () : Promise<Graph> => {
@@ -18,12 +17,31 @@ const preprocessData = (graph: Graph) : {data: any}[] => {
     const namespaceColorMap = new ColorMap(paletteDark);
     namespaceColorMap.defineFixedColor("", "#ffffff");
 
+    const emphasizedTypes = {
+        "V1Namespace" : true,
+        "V1Node" : true
+    }
+    const getNodeStyling = (type: string): Record<string, any> => {
+        if (type in emphasizedTypes) {
+            return {
+                height: 50,
+                width: 50
+            };
+        } else {
+            return {
+                height: 30,
+                width: 30
+            };
+        }
+    }
+
     for (const node of graph.getAllNodes()) {
         elements.push({
             data: {
                 name: node.kubeObj.metadata?.name!,
                 nodeColor: kindColorMap.getColor(node.kind),
-                ...node
+                ...node,
+                ...getNodeStyling(node.kind)
             }
         })
     }
@@ -51,17 +69,7 @@ const preprocessData = (graph: Graph) : {data: any}[] => {
     const apiGraph = await getCurrentGraph();
     const transformedData = preprocessData(apiGraph);
 
-    // const noneList = [];
-    // for (const node of apiGraph.getAllNodes()) {
-    //     if (node.outgoing.length === 0 && node.incoming.length === 0) {
-    //         noneList.push(node);
-    //     }
-    // }
-    // console.log(noneList);
-
     cytoscape.use(euler);
-    // cytoscape.use(cytoscapePopper(tippyFactory));
-
     const cy = cytoscape({
         container: document.getElementById('container'),
         elements: transformedData,
@@ -72,6 +80,16 @@ const preprocessData = (graph: Graph) : {data: any}[] => {
                     'background-color': 'data(nodeColor)',
                     label: 'data(name)',
                     color: "white",
+                    height: "data(height)",
+                    width: "data(width)",
+                }
+            },
+            {
+                selector: "label",
+                style: {
+                    "text-outline-color": "#222225",
+                    "text-outline-opacity": 1,
+                    "text-outline-width": "2px"
                 }
             },
             {
@@ -109,6 +127,8 @@ const preprocessData = (graph: Graph) : {data: any}[] => {
     cy.on('tap', 'node', function(evt) {
         const node = evt.target;
         const data = node.data();
+
+        console.log(node.width(), node.height());
 
         // TODO
     });
