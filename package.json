@@ -20,6 +20,7 @@
     "cytoscape": "^3.31.1",
     "cytoscape-euler": "^1.2.3",
     "express": "^4.18.2",
+    "highlight.js": "^11.11.1",
     "tsx": "^4.5.0",
     "typescript": "^5.3.2",
     "vite-express": "*"

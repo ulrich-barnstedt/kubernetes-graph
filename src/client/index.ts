@@ -1,6 +1,7 @@
 import cytoscape from "cytoscape";
 import euler from 'cytoscape-euler';
 import {getCurrentGraph, preprocessData} from "./graphData";
+import {setupOverlay} from "./overlay";
 
 (async () => {
     const apiGraph = await getCurrentGraph();
@@ -61,17 +62,5 @@ import {getCurrentGraph, preprocessData} from "./graphData";
         }
     });
 
-    cy.on("tap", (ev) => {
-        // WebGL does not properly output nodes, therefore slowly find the correct node
-        const node = Array.from(cy.nodes()).find(node => {
-            const bb = node.boundingbox({includeLabels: false});
-
-            return bb.x1 <= ev.position.x &&
-                bb.x2 >= ev.position.x &&
-                bb.y1 <= ev.position.y &&
-                bb.y2 >= ev.position.y;
-        });
-
-        console.log(node);
-    })
+    setupOverlay(cy);
 })();
