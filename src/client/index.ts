@@ -2,6 +2,7 @@ import cytoscape from "cytoscape";
 import euler from 'cytoscape-euler';
 import {getCurrentGraph, preprocessData} from "./graphData";
 import {setupOverlay} from "./overlay";
+import 'highlight.js/styles/atom-one-dark.css';
 
 (async () => {
     const apiGraph = await getCurrentGraph();

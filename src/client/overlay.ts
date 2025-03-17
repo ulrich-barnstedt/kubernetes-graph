@@ -24,7 +24,7 @@ export const setupOverlay = (cy: cytoscape.Core) => {
             overlay.style.display = "none";
             return;
         }
-        overlay.style.display = "block";
+        overlay.style.display = "flex";
 
         const data = node.data();
         const highlightedJSON = hljs.highlight(
@@ -32,7 +32,7 @@ export const setupOverlay = (cy: cytoscape.Core) => {
             {language: "json"}
         );
 
-        overlayContent.innerText = highlightedJSON.value;
-        overlayHeader.innerText = `${data.name}\n  ${data.kind}\n  ${data.id}`;
+        overlayContent.innerHTML = highlightedJSON.value;
+        overlayHeader.innerHTML = `<b>${data.name}</b>\n  ${data.kind}\n  ${data.id}`;
     })
 }
