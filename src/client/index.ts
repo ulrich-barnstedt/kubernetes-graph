@@ -4,8 +4,9 @@ import {getCurrentGraph, preprocessData} from "./graphData";
 import {setupOverlay} from "./overlay";
 
 (async () => {
+    const urlParams = new URLSearchParams(window.location.search);
     const apiGraph = await getCurrentGraph();
-    const transformedData = preprocessData(apiGraph);
+    const transformedData = preprocessData(apiGraph, (urlParams.get("hide") ?? "").split(","));
 
     cytoscape.use(euler);
     const cy = cytoscape({

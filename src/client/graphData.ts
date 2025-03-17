@@ -9,7 +9,8 @@ export const getCurrentGraph = async () : Promise<Graph> => {
     return Graph.fromSerialized(deserialize(json));
 }
 
-export const preprocessData = (graph: Graph) : {data: any}[] => {
+export const preprocessData = (graph: Graph, hiddenTypes: string[] = []) : {data: any}[] => {
+    const hiddenTypesMap = Object.fromEntries(hiddenTypes.map(t => [t, t]));
     const elements = [];
     const kindColorMap = new ColorMap(createColorIterator(40, 75));
     const namespaceColorMap = new ColorMap(createColorIterator(40, 75));
@@ -34,6 +35,10 @@ export const preprocessData = (graph: Graph) : {data: any}[] => {
     }
 
     for (const node of graph.getAllNodes()) {
+        if (node.kind in hiddenTypesMap) {
+            continue;
+        }
+
         elements.push({
             data: {
                 name: node.kubeObj.metadata?.name!,
@@ -44,6 +49,10 @@ export const preprocessData = (graph: Graph) : {data: any}[] => {
         })
     }
     for (const relation of graph.getAllRelations()) {
+        if (relation.from.kind in hiddenTypesMap || relation.to.kind in hiddenTypesMap) {
+            continue;
+        }
+
         let isSameNamespace =
             relation.from.kubeObj.metadata?.namespace! === relation.to.kubeObj.metadata?.namespace! ||
             relation.to.kind === "V1Namespace" ||
