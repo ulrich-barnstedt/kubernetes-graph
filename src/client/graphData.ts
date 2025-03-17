@@ -1,6 +1,6 @@
 import {Graph} from "../shared/graph/Graph";
 import {deserialize} from "@ungap/structured-clone";
-import {ColorMap, paletteDark, paletteLight} from "./colors";
+import {ColorMap, createColorIterator} from "./colors";
 
 export const getCurrentGraph = async () : Promise<Graph> => {
     const apiResponse = await fetch("/graph");
@@ -11,8 +11,8 @@ export const getCurrentGraph = async () : Promise<Graph> => {
 
 export const preprocessData = (graph: Graph) : {data: any}[] => {
     const elements = [];
-    const kindColorMap = new ColorMap(paletteLight);
-    const namespaceColorMap = new ColorMap(paletteDark);
+    const kindColorMap = new ColorMap(createColorIterator(50));
+    const namespaceColorMap = new ColorMap(createColorIterator(60));
     namespaceColorMap.defineFixedColor("", "#ffffff");
 
     const emphasizedTypes = {
