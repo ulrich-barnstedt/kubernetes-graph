@@ -52,11 +52,6 @@ export const preprocessData = (graph: Graph, hiddenTypes: string[] = []) : {data
         if (relation.from.kind in hiddenTypesMap || relation.to.kind in hiddenTypesMap) {
             continue;
         }
-
-        let isSameNamespace =
-            relation.from.kubeObj.metadata?.namespace! === relation.to.kubeObj.metadata?.namespace! ||
-            relation.to.kind === "V1Namespace" ||
-            relation.from.kind === "V1Namespace";
         let namespace = relation.from.kubeObj.metadata?.namespace! || relation.to.kubeObj.metadata?.namespace!;
 
         elements.push({
@@ -64,7 +59,7 @@ export const preprocessData = (graph: Graph, hiddenTypes: string[] = []) : {data
                 id: relation.from.id + "+" + relation.to.id,
                 source: relation.from.id,
                 target: relation.to.id,
-                linkColor: isSameNamespace ? namespaceColorMap.getColor(namespace) : "white"
+                linkColor: relation.sameNamespace ? namespaceColorMap.getColor(namespace) : "white"
             }
         })
     }

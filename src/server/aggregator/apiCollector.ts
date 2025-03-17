@@ -4,7 +4,7 @@ import {
     V1DeploymentList, V1EndpointsList, V1JobList,
     V1NamespaceList,
     V1NodeList,
-    V1PodList, V1ReplicaSet, V1ReplicationControllerList,
+    V1PodList, V1ReplicaSetList, V1ReplicationControllerList,
     V1ServiceAccountList,
     V1ServiceList, V1StatefulSetList
 } from "@kubernetes/client-node";
@@ -23,7 +23,7 @@ export interface ClusterData {
     services: V1ServiceList,
     serviceAccounts: V1ServiceAccountList,
     replicationControllers: V1ReplicationControllerList,
-    replicaSets: V1ReplicaSet,
+    replicaSets: V1ReplicaSetList,
     endpoints: V1EndpointsList,
     statefulSets: V1StatefulSetList,
     daemonSets: V1DaemonSetList,

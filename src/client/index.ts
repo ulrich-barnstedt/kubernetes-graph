@@ -50,7 +50,7 @@ import {setupOverlay} from "./overlay";
                 const data = node.data();
                 const connections = data.incoming.length + data.outgoing.length;
                 const mass =
-                    ((connections === 0 ? 1 : connections) * 5) +
+                    ((connections === 0 ? 1 : connections) * 8) +
                     (data.name.length * 0.5);
 
                 // WARNING: returning 0 will cause INFINITE ram usage

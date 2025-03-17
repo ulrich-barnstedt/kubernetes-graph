@@ -8,6 +8,26 @@ const mapToId = (list: KubernetesObject[]): Record<string, string> => {
     return Object.fromEntries(list.map(n => [n.metadata?.name!, n.metadata?.uid!]));
 }
 
+const findNamespaceObject = (node: GraphNode, visited: GraphNode[]) : GraphNode | null => {
+    if (node.kind === "V1Namespace") return node;
+
+    const nodeVisited = (sN: GraphNode) => visited.find(n => n === sN) !== undefined;
+    visited.push(node);
+
+    const allRelations: GraphNode[] = [
+        ...node.incoming.filter(r => r.sameNamespace).map(r => r.from),
+        ...node.outgoing.filter(r => r.sameNamespace).map(r => r.to),
+    ]
+
+    for (const relatedNode of allRelations) {
+        if (nodeVisited(relatedNode)) continue;
+        let result = findNamespaceObject(relatedNode, visited);
+        if (result) return result;
+    }
+
+    return null;
+}
+
 export const createRelations = async (
     graph: Graph,
     data: ClusterData,
@@ -19,22 +39,13 @@ export const createRelations = async (
         serviceAccounts: mapToId(data.serviceAccounts.items),
     }
 
-    for (const deployment of data.deployments.items) {
-        graph.createRelationByIds(deployment.metadata?.uid!, nameToIndex.namespace[deployment.metadata?.namespace!]);
-    }
-
-    for (const account of data.serviceAccounts.items) {
-        graph.createRelationByIds(account.metadata?.uid!, nameToIndex.namespace[account.metadata?.namespace!]);
-    }
-
     for (const pod of data.pods.items) {
         graph.createRelationByIds(pod.metadata?.uid!, nameToIndex.node[pod.spec?.nodeName!]);
     }
 
     for (const daemonSet of data.daemonSets.items) {
-        if (!daemonSet.spec?.template.spec?.serviceAccountName) {
-            continue;
-        }
+        if (!daemonSet.spec?.template.spec?.serviceAccountName) continue;
+
         graph.createRelationByIds(daemonSet.metadata?.uid!, nameToIndex.serviceAccounts[daemonSet.spec.template.spec.serviceAccountName]);
     }
 
@@ -51,9 +62,8 @@ export const createRelations = async (
     }
 
     for (const endpoint of data.endpoints.items) {
-        graph.createRelationByIds(endpoint.metadata?.uid!, nameToIndex.namespace[endpoint.metadata?.namespace!]);
-
         if (!endpoint.subsets) continue;
+
         for (const subset of endpoint.subsets) {
             const addresses = [
                 ...(subset.addresses ?? []),
@@ -78,6 +88,34 @@ export const createRelations = async (
         for (const ref of obj.metadata!.ownerReferences) {
             graph.createRelationByIds(obj.metadata!.uid!, ref.uid);
         }
+    }
+
+    // ensure all objects have a direct path to their namespace
+    // order of connections is important, excludes: namespace, node
+    const prioritizedObjectList: KubernetesObject[] = [
+        ...data.deployments.items,
+        ...data.replicationControllers.items,
+        ...data.replicaSets.items,
+        ...data.pods.items,
+
+        ...data.serviceAccounts.items,
+        ...data.endpoints.items,
+        ...data.services.items,
+        ...data.statefulSets.items,
+        ...data.daemonSets.items,
+        ...data.jobs.items
+    ]
+    for (const obj of prioritizedObjectList) {
+        if (!obj.metadata?.namespace) continue;
+
+        const node = graph.getNodeById(obj.metadata.uid!);
+        const namespaceNode = findNamespaceObject(node, []);
+        if (namespaceNode) continue;
+
+        graph.createRelationByIds(
+            obj.metadata?.uid!,
+            nameToIndex.namespace[obj.metadata?.namespace!]
+        );
     }
 }
 
