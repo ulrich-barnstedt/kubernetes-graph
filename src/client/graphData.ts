@@ -11,8 +11,8 @@ export const getCurrentGraph = async () : Promise<Graph> => {
 
 export const preprocessData = (graph: Graph) : {data: any}[] => {
     const elements = [];
-    const kindColorMap = new ColorMap(createColorIterator(50));
-    const namespaceColorMap = new ColorMap(createColorIterator(60));
+    const kindColorMap = new ColorMap(createColorIterator(40, 75));
+    const namespaceColorMap = new ColorMap(createColorIterator(40, 75));
     namespaceColorMap.defineFixedColor("", "#ffffff");
 
     const emphasizedTypes = {

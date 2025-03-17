@@ -1,4 +1,4 @@
-export const createColorIterator = (brightness: number = 50) : (() => string) => {
+export const createColorIterator = (brightness: number = 50, saturation: number = 100) : (() => string) => {
     let offset = -2;
     let currentDivisionRatio = 360;
 
@@ -10,7 +10,7 @@ export const createColorIterator = (brightness: number = 50) : (() => string) =>
             offset = 1;
         }
 
-        return `hsl(${(currentDivisionRatio * (offset)).toFixed(1)},100%,${brightness}%)`;
+        return `hsl(${(currentDivisionRatio * (offset)).toFixed(1)},${saturation}%,${brightness}%)`;
     }
 }
 

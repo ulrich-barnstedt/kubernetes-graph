@@ -4,14 +4,19 @@ import {Graph} from "../../shared/graph/Graph.js";
 import {GraphNode} from "../../shared/graph/GraphNode.js";
 import {kube} from "../k8sClient.js";
 
+const mapToId = (list: KubernetesObject[]): Record<string, string> => {
+    return Object.fromEntries(list.map(n => [n.metadata?.name!, n.metadata?.uid!]));
+}
+
 export const createRelations = async (
     graph: Graph,
     data: ClusterData,
     allObjects: KubernetesObject[]
 ) => {
     const nameToIndex: Record<string, Record<string, string>> = {
-        namespace: Object.fromEntries(data.namespaces.items.map(n => [n.metadata?.name, n.metadata?.uid])),
-        node: Object.fromEntries(data.nodes.items.map(n => [n.metadata?.name!, n.metadata?.uid!]))
+        namespace: mapToId(data.namespaces.items),
+        node: mapToId(data.nodes.items),
+        serviceAccounts: mapToId(data.serviceAccounts.items),
     }
 
     for (const deployment of data.deployments.items) {
@@ -24,6 +29,13 @@ export const createRelations = async (
 
     for (const pod of data.pods.items) {
         graph.createRelationByIds(pod.metadata?.uid!, nameToIndex.node[pod.spec?.nodeName!]);
+    }
+
+    for (const daemonSet of data.daemonSets.items) {
+        if (!daemonSet.spec?.template.spec?.serviceAccountName) {
+            continue;
+        }
+        graph.createRelationByIds(daemonSet.metadata?.uid!, nameToIndex.serviceAccounts[daemonSet.spec.template.spec.serviceAccountName]);
     }
 
     for (const service of data.services.items) {
