@@ -17,13 +17,19 @@
             height: 100%;
             width: 100%;
             overflow: hidden;
+        }
+
+        .color-bg {
             background: #222225;
         }
     </style>
 </head>
 <body>
-    <div id="app" class="fill">
-        <div id="container" class="fill"></div>
+    <div id="app" class="fill color-bg">
+        <div id="overlay" class="fill">
+            test overlay
+        </div>
+        <div id="container" class="fill color-bg"></div>
     </div>
     <script type="module" src="/src/client/index.ts"></script>
 </body>
