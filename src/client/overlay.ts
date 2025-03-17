@@ -1,8 +1,10 @@
 import cytoscape from "cytoscape";
 import hljs from 'highlight.js/lib/core';
-import json from 'highlight.js/lib/languages/json';
+import yamlHighlight from 'highlight.js/lib/languages/yaml';
+import 'highlight.js/styles/atom-one-dark.css';
+import YAML from "yaml";
 
-hljs.registerLanguage('json', json);
+hljs.registerLanguage('yaml', yamlHighlight);
 
 export const setupOverlay = (cy: cytoscape.Core) => {
     const overlay = document.getElementById("overlay")!;
@@ -27,12 +29,15 @@ export const setupOverlay = (cy: cytoscape.Core) => {
         overlay.style.display = "flex";
 
         const data = node.data();
-        const highlightedJSON = hljs.highlight(
-            JSON.stringify(data.kubeObj, null, 2),
-            {language: "json"}
+        const highlightedYAML = hljs.highlight(
+            YAML.stringify({
+                ...data.kubeObj,
+                metadata: undefined
+            }),
+            {language: "yaml"}
         );
 
-        overlayContent.innerHTML = highlightedJSON.value;
+        overlayContent.innerHTML = highlightedYAML.value;
         overlayHeader.innerHTML = `<b>${data.name}</b>\n  ${data.kind}\n  ${data.id}`;
     })
 }
