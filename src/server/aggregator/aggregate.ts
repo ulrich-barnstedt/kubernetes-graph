@@ -70,14 +70,9 @@ export const createRelations = async (
                 ...(subset.notReadyAddresses ?? [])
             ]
             for (const address of addresses) {
-                if (address.targetRef?.uid) {
-                    graph.createRelationByIds(endpoint.metadata?.uid!, address.targetRef?.uid!);
-                } else {
-                    const pod = data.pods.items.find(pod => pod.status?.hostIP === address.ip);
-                    if (pod) {
-                        graph.createRelationByIds(endpoint.metadata?.uid!, pod.metadata?.uid!);
-                    }
-                }
+                if (!address.targetRef?.uid) continue;
+
+        	graph.createRelationByIds(endpoint.metadata?.uid!, address.targetRef?.uid!);
             }
         }
     }
@@ -96,13 +91,15 @@ export const createRelations = async (
         ...data.deployments.items,
         ...data.replicationControllers.items,
         ...data.replicaSets.items,
+
+        ...data.statefulSets.items,
+        ...data.daemonSets.items,
+
         ...data.pods.items,
 
         ...data.serviceAccounts.items,
         ...data.endpoints.items,
         ...data.services.items,
-        ...data.statefulSets.items,
-        ...data.daemonSets.items,
         ...data.jobs.items
     ]
     for (const obj of prioritizedObjectList) {
