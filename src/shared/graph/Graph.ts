@@ -34,6 +34,11 @@ export class Graph {
     }
 
     public createRelation (from: GraphNode, to: GraphNode) : GraphRelation {
+	if (!to || !from) {
+	    console.warn(`WARNING: Aggregator attempted to add invalid relation: ${from?.id} -> ${to?.id}`);
+	    return;
+	}
+
         const relation = new GraphRelation(
             from,
             to
