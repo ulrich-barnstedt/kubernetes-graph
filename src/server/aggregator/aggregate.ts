@@ -7,6 +7,18 @@ import {kube} from "../k8sClient.js";
 const mapToId = (list: KubernetesObject[]): Record<string, string> => {
     return Object.fromEntries(list.map(n => [n.metadata?.name!, n.metadata?.uid!]));
 }
+const mapToNamespacedId = (list: KubernetesObject[]): Record<string, Record<string, string>> => {
+    const namespaced: Record<string, Record<string, string>> = {};
+    for (const item of list) {
+        if (!(item.metadata?.namespace! in namespaced)) {
+            namespaced[item.metadata?.namespace!] = {};
+        }
+
+        namespaced[item.metadata?.namespace!][item.metadata?.name!] = item.metadata?.uid!;
+    }
+
+    return namespaced;
+}
 
 const findNamespaceObject = (node: GraphNode, visited: GraphNode[]) : GraphNode | null => {
     if (node.kind === "V1Namespace") return node;
@@ -31,22 +43,28 @@ const findNamespaceObject = (node: GraphNode, visited: GraphNode[]) : GraphNode 
 export const createRelations = async (
     graph: Graph,
     data: ClusterData,
-    allObjects: KubernetesObject[]
+    renderedObjects: KubernetesObject[]
 ) => {
-    const nameToIndex: Record<string, Record<string, string>> = {
+    const nameToID: Record<string, Record<string, string>> = {
         namespace: mapToId(data.namespaces.items),
         node: mapToId(data.nodes.items),
         serviceAccounts: mapToId(data.serviceAccounts.items),
+        clusterRoles: mapToId(data.clusterRoles.items)
+    }
+    // indexing: namespacedNameToID[type][namespace][name]
+    const namespacedNameToID: Record<string, Record<string, Record<string, string>>> = {
+        serviceAccounts: mapToNamespacedId(data.serviceAccounts.items),
+        roles: mapToNamespacedId(data.roles.items)
     }
 
     for (const pod of data.pods.items) {
-        graph.createRelationByIds(pod.metadata?.uid!, nameToIndex.node[pod.spec?.nodeName!]);
+        graph.createRelationByIds(pod.metadata?.uid!, nameToID.node[pod.spec?.nodeName!]);
     }
 
     for (const daemonSet of data.daemonSets.items) {
         if (!daemonSet.spec?.template.spec?.serviceAccountName) continue;
 
-        graph.createRelationByIds(daemonSet.metadata?.uid!, nameToIndex.serviceAccounts[daemonSet.spec.template.spec.serviceAccountName]);
+        graph.createRelationByIds(daemonSet.metadata?.uid!, nameToID.serviceAccounts[daemonSet.spec.template.spec.serviceAccountName]);
     }
 
     for (const service of data.services.items) {
@@ -77,7 +95,24 @@ export const createRelations = async (
         }
     }
 
-    for (const obj of allObjects) {
+    // TODO: fix undefined refs
+    for (const roleBinding of [...data.roleBindings.items, ...data.clusterRoleBindings.items]) {
+        if (!roleBinding.subjects) continue;
+
+        for (const subject of roleBinding.subjects) {
+            if (subject.kind !== "ServiceAccount") continue;
+
+            const serviceAccIndex = subject.namespace ? namespacedNameToID.serviceAccounts[subject.namespace] : nameToID.serviceAccounts;
+            const roleIndex = roleBinding.metadata?.namespace ? namespacedNameToID.roles[roleBinding.metadata.namespace] : nameToID.clusterRoles;
+
+            graph.createRelationByIds(
+                serviceAccIndex[subject.name],
+                roleIndex[roleBinding.roleRef.name]
+            )
+        }
+    }
+
+    for (const obj of renderedObjects) {
         if (!obj.metadata!.ownerReferences) continue;
 
         for (const ref of obj.metadata!.ownerReferences) {
@@ -97,7 +132,9 @@ export const createRelations = async (
 
         ...data.pods.items,
 
+        ...data.roles.items,
         ...data.serviceAccounts.items,
+
         ...data.endpoints.items,
         ...data.services.items,
         ...data.jobs.items
@@ -111,7 +148,7 @@ export const createRelations = async (
 
         graph.createRelationByIds(
             obj.metadata?.uid!,
-            nameToIndex.namespace[obj.metadata?.namespace!]
+            nameToID.namespace[obj.metadata?.namespace!]
         );
     }
 }
@@ -119,10 +156,14 @@ export const createRelations = async (
 export const constructAggregatedGraph = async () : Promise<Graph> => {
     const graph = new Graph();
     const data = await fetchClusterData();
-    const allObjects: KubernetesObject[] = Object.values(data).map(obj => obj.items).flat();
 
-    graph.addNodes(...allObjects.map(o => new GraphNode(o)));
-    await createRelations(graph, data, allObjects);
+    const renderedData: Partial<ClusterData> = {...data};
+    delete renderedData.roleBindings;
+    delete renderedData.clusterRoleBindings;
+    const renderedObjects: KubernetesObject[] = Object.values(renderedData).map(obj => obj.items).flat();
+
+    graph.addNodes(...renderedObjects.map(o => new GraphNode(o)));
+    await createRelations(graph, data, renderedObjects);
 
     return graph;
 }
