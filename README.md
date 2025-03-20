@@ -1,10 +1,10 @@
 # Kube-D3
 
-Kubernetes graph visualizer
+Kubernetes cluster visualization, in the browser
 
 ## Demo
 
-![Demo graph](./assets/demo.png)
+TBD after UI rewrite
 
 
 ## TODO
@@ -16,6 +16,7 @@ Kubernetes graph visualizer
 - New backend for handling rules & types to show
 - Rules module in own files
 - Color scheme options
+- Namespace selector in UI?
 
 
 ## Kubernetes objects support
