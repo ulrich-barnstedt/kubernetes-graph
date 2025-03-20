@@ -105,6 +105,8 @@ export const createRelations = async (
             const serviceAccIndex = subject.namespace ? namespacedNameToID.serviceAccounts[subject.namespace] : nameToID.serviceAccounts;
             const roleIndex = roleBinding.metadata?.namespace ? namespacedNameToID.roles[roleBinding.metadata.namespace] : nameToID.clusterRoles;
 
+            // not all bindings have to have valid subjects
+            if (serviceAccIndex[subject.name] === undefined) continue;
             graph.createRelationByIds(
                 serviceAccIndex[subject.name],
                 roleIndex[roleBinding.roleRef.name]
