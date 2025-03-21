@@ -1,8 +1,8 @@
 import {type ClusterData, fetchClusterData} from "./apiCollector.js";
 import type {KubernetesObject} from "@kubernetes/client-node";
-import {Graph} from "../../../../lib/graph/Graph.js";
-import {GraphNode} from "../../../../lib/graph/GraphNode.js";
-import {kube} from "../../../../lib/k8sClient.js";
+import {Graph} from "$lib/graph/Graph";
+import {GraphNode} from "$lib/graph/GraphNode";
+import {kube} from "$lib/k8sClient";
 
 const mapToId = (list: KubernetesObject[]): Record<string, string> => {
     return Object.fromEntries(list.map(n => [n.metadata?.name!, n.metadata?.uid!]));

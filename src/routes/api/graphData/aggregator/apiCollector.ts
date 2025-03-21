@@ -1,4 +1,4 @@
-import {kube} from "../../../../lib/k8sClient.js";
+import {kube} from "$lib/k8sClient";
 import {
     V1ClusterRoleBindingList, V1ClusterRoleList,
     V1DaemonSetList,

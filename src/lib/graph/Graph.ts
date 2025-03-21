@@ -5,7 +5,6 @@ export class Graph {
     private readonly nodes: Record<string, GraphNode>;
     private readonly relations: GraphRelation[];
 
-
     constructor (nodes: Record<string, GraphNode> = {}, relations: GraphRelation[] = []) {
         this.nodes = nodes;
         this.relations = relations;

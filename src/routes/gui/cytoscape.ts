@@ -1,15 +1,14 @@
 import cytoscape, {type NodeSingular} from "cytoscape";
 import euler, {type EulerLayoutOptions} from 'cytoscape-euler';
 import {getCurrentGraph, preprocessData} from "./graphData";
-import {setupOverlay} from "./overlay";
 
-export const setupCytoscape = async (containerElement: HTMLElement) => {
+export const setupCytoscape = async (containerElement: HTMLElement) : Promise<cytoscape.Core> => {
     const apiGraph = await getCurrentGraph();
     // TODO: implement new filtering system from GUI
     const transformedData = preprocessData(apiGraph, []);
 
     cytoscape.use(euler);
-    const cy = cytoscape({
+    return cytoscape({
         container: containerElement,
         elements: transformedData,
         style: [
@@ -44,7 +43,7 @@ export const setupCytoscape = async (containerElement: HTMLElement) => {
             maxIterations: 4000,
             maxSimulationTime: 4000,
             springLength: () => 120,
-            mass: (node: NodeSingular)  => {
+            mass: (node: NodeSingular) => {
                 const data = node.data();
                 const connections = data.incoming.length + data.outgoing.length;
                 const mass =
@@ -64,7 +63,4 @@ export const setupCytoscape = async (containerElement: HTMLElement) => {
             // showFps: true
         }
     });
-
-    // TODO: port overlay to svelte
-    // setupOverlay(cy);
 }
