@@ -9,6 +9,7 @@ interface KubeClients {
     batch: BatchV1Api,
     rbac: RbacAuthorizationV1Api
 }
+
 export const kube: KubeClients = {
     core: kc.makeApiClient(CoreV1Api),
     apps: kc.makeApiClient(AppsV1Api),

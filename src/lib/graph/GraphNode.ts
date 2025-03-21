@@ -1,4 +1,4 @@
-import {KubernetesObject} from "@kubernetes/client-node";
+import type {KubernetesObject} from "@kubernetes/client-node";
 import {GraphRelation} from "./GraphRelation.js";
 
 export class GraphNode {

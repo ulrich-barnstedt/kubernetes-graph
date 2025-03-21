@@ -1,17 +1,16 @@
-import cytoscape, {NodeSingular} from "cytoscape";
-// @ts-ignore
-import euler from 'cytoscape-euler';
+import cytoscape, {type NodeSingular} from "cytoscape";
+import euler, {type EulerLayoutOptions} from 'cytoscape-euler';
 import {getCurrentGraph, preprocessData} from "./graphData";
 import {setupOverlay} from "./overlay";
 
-(async () => {
-    const urlParams = new URLSearchParams(window.location.search);
+export const setupCytoscape = async (containerElement: HTMLElement) => {
     const apiGraph = await getCurrentGraph();
-    const transformedData = preprocessData(apiGraph, (urlParams.get("hide") ?? "").split(","));
+    // TODO: implement new filtering system from GUI
+    const transformedData = preprocessData(apiGraph, []);
 
     cytoscape.use(euler);
     const cy = cytoscape({
-        container: document.getElementById('container'),
+        container: containerElement,
         elements: transformedData,
         style: [
             {
@@ -42,7 +41,6 @@ import {setupOverlay} from "./overlay";
         ],
         layout: {
             name: "euler",
-            // @ts-ignore
             maxIterations: 4000,
             maxSimulationTime: 4000,
             springLength: () => 120,
@@ -56,15 +54,17 @@ import {setupOverlay} from "./overlay";
                 // WARNING: returning 0 will cause INFINITE ram usage
                 return mass > 0 ? mass : 1;
             }
-        },
+        } as EulerLayoutOptions,
         wheelSensitivity: 0.3,
         autoungrabify: true,
         autounselectify: true,
+        // @ts-ignore
         renderer: {
             webgl: true,
             // showFps: true
         }
     });
 
-    setupOverlay(cy);
-})();
+    // TODO: port overlay to svelte
+    // setupOverlay(cy);
+}

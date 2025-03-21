@@ -1,9 +1,9 @@
-import {Graph} from "../shared/graph/Graph";
+import {Graph} from "$lib/graph/Graph";
 import {deserialize} from "@ungap/structured-clone";
-import {ColorMap, createColorIterator} from "./colors";
+import {ColorMap, createColorIterator} from "$lib/colors";
 
 export const getCurrentGraph = async () : Promise<Graph> => {
-    const apiResponse = await fetch("/graph");
+    const apiResponse = await fetch("/api/graphData");
     const json = await apiResponse.json();
 
     return Graph.fromSerialized(deserialize(json));

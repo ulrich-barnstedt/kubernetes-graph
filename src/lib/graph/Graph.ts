@@ -33,11 +33,11 @@ export class Graph {
         }
     }
 
-    public createRelation (from: GraphNode, to: GraphNode) : GraphRelation {
-	if (!to || !from) {
-	    console.warn(`WARNING: Aggregator attempted to add invalid relation: ${from?.id} -> ${to?.id}`);
-	    return;
-	}
+    public createRelation (from: GraphNode, to: GraphNode) : GraphRelation | null {
+        if (!to || !from) {
+            console.warn(`WARNING: Aggregator attempted to add invalid relation: ${from?.id} -> ${to?.id}`);
+            return null;
+        }
 
         const relation = new GraphRelation(
             from,
@@ -50,7 +50,7 @@ export class Graph {
         return relation;
     }
 
-    public createRelationByIds (from: string, to: string) : GraphRelation {
+    public createRelationByIds (from: string, to: string) : GraphRelation | null {
         return this.createRelation(this.getNodeById(from), this.getNodeById(to));
     }
 
