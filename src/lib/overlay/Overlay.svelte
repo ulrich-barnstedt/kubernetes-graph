@@ -1,13 +1,16 @@
 <script lang="ts">
-    import cytoscape from "cytoscape";
-    import hljs from "highlight.js/lib/core";
+    import type cytoscape from "cytoscape";
     import YAML from "yaml";
-    import "./highlighting";
+    import Highlight from "svelte-highlight";
+    import {yaml} from "svelte-highlight/languages";
+    import 'highlight.js/styles/atom-one-dark.css';
 
     const {cy} : {cy: cytoscape.Core} = $props();
     let showOverlay = $state(false);
-    let header = $state("");
-    let content = $state("");
+    let objectYAML = $state("");
+    let objectName =  $state("");
+    let objectKind = $state("");
+    let objectId = $state("");
 
     cy.on("tap", (ev) => {
         // WebGL does not properly output nodes, therefore slowly find the correct node
@@ -27,24 +30,41 @@
         showOverlay = true;
 
         const data = node.data();
-        const highlightedYAML = hljs.highlight(
-            YAML.stringify({
-                ...data.kubeObj,
-                metadata: undefined
-            }),
-            {language: "yaml"}
-        );
-
-        content = highlightedYAML.value;
-        header = `<b>${data.name}</b>\n  ${data.kind}\n  ${data.id}`;
+        objectYAML = YAML.stringify({
+            ...data.kubeObj,
+            metadata: undefined
+        });
+        objectName = data.name;
+        objectKind = data.kind;
+        objectId = data.id;
     })
 </script>
 
+<svelte:head>
+    <style>
+        /* force disable HL.JS adding unwanted styles */
+        code.hljs {
+            padding: 0 !important;
+            background: rgba(0,0,0,0);
+            overflow: visible !important;
+        }
+    </style>
+</svelte:head>
 {#if showOverlay}
     <div class="overlay-container">
-        <!-- TODO: find alternative for @html? -->
-        <pre class="overlay-header">{@html header}</pre>
-        <pre class="overlay-content"><code class="language-json">{@html content}</code></pre>
+        <div class="overlay-header">
+            <b>{objectName}</b>
+            <br/>
+            &nbsp;&nbsp;{objectKind}
+            <br/>
+            &nbsp;&nbsp;{objectId}
+        </div>
+        <div class="overlay-content">
+            <Highlight
+                language={yaml}
+                code={objectYAML}
+            />
+        </div>
     </div>
 {/if}
 
@@ -71,13 +91,13 @@
         font-size: 15px;
         color: #61afef;
         padding: 12px 20px 12px 25px;
-        margin-bottom: 15px;
         background: #191920;
+        font-family: monospace;
     }
 
     .overlay-content {
         overflow: auto;
         margin: 0;
-        padding: 0 20px 20px 25px;
+        padding: 15px 20px 20px 25px;
     }
 </style>
