@@ -1,10 +1,8 @@
 import {type ClusterData, defaultObjectTypes, supportedObjectTypes} from "$lib/aggregate/k8sFetch";
 import {json} from "@sveltejs/kit";
+import type {SelectableSpec} from "../SelectableSpec";
 
-export interface ObjectTypesSpecification {
-    available: (keyof ClusterData)[],
-    defaultSelected: (keyof ClusterData)[]
-}
+export type ObjectTypesSpecification = SelectableSpec<ClusterData>;
 
 export const GET = async () => {
     const spec: ObjectTypesSpecification = {

@@ -11,7 +11,7 @@ export default {
         for (const pod of data.pods.items) {
             graph.createRelationByIds(
                 pod.metadata?.uid!,
-                objectByName(data.pods, pod.spec?.nodeName!)?.metadata?.name!
+                objectByName(data.nodes, pod.spec?.nodeName!)?.metadata?.uid!
             );
         }
     }
