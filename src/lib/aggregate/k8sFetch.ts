@@ -20,8 +20,17 @@ export const supportedObjectTypes = {
     clusterRoles: () => kube.rbac.listClusterRole(),
     clusterRoleBindings: () => kube.rbac.listClusterRoleBinding()
 } satisfies Record<string, () => Promise<KubernetesListObject<any>>>;
-
 export type ClusterData = AwaitedValuesRecord<ExecutedFunctionsRecord<typeof supportedObjectTypes>>;
+
+export const defaultObjectTypes: (keyof ClusterData)[] = [
+    "deployments",
+    "pods",
+    "nodes",
+    "namespaces",
+    "services",
+    "replicationControllers",
+    "replicaSets"
+]
 
 const parallelizeValues = async <T extends PromiseValuesRecord> (obj: T): Promise<AwaitedValuesRecord<T>> => {
     const [keys, promises] = Object.entries(obj).reduce<[(keyof T)[], Promise<ValueOf<T>>[]]>((acc, val) => {
