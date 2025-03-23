@@ -30,6 +30,7 @@ export const createRoleResolver = <TB extends ValueOf<bindingDataSources>, TR ex
             for (const subject of roleBinding.subjects) {
                 // TODO: support other subjects?
                 if (subject.kind !== "ServiceAccount") continue;
+                if (!data.serviceAccounts) continue;
 
                 const subjectObject = subject.namespace ?
                     namespacedObjectByName(data.serviceAccounts, subject.namespace, subject.name) :

@@ -10,7 +10,9 @@
     import type {AggregationSpec} from "../api/aggregate/+server";
 
     let cyContainer: HTMLElement;
-    let cy: cytoscape.Core;
+    // @ts-ignore cy is always set, ignore undefined
+    let cy: cytoscape.Core = $state();
+
     let derivedSpec: AggregationSpec = $derived({
         objectTypes: aggregationSpecification.objectTypes,
         rules: aggregationSpecification.rules,

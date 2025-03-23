@@ -30,7 +30,11 @@ export const defaultObjectTypes: (keyof ClusterData)[] = [
     "namespaces",
     "services",
     "replicationControllers",
-    "replicaSets"
+    "replicaSets",
+    "endpoints",
+    "statefulSets",
+    "daemonSets",
+    "jobs"
 ]
 
 const parallelizePromises = async <T extends PromiseValuesRecord> (obj: T): Promise<AwaitedValuesRecord<T>> => {

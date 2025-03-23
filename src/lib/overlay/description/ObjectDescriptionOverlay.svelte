@@ -62,8 +62,8 @@
         </div>
         <div class="overlay-content">
             <Highlight
-                    language={yaml}
-                    code={objectYAML}
+                language={yaml}
+                code={objectYAML}
             />
         </div>
     </OverlayContainer>
@@ -75,7 +75,6 @@
         color: #61afef;
         padding: 12px 20px 12px 25px;
         background: #191920;
-        font-family: monospace;
     }
 
     .overlay-content {

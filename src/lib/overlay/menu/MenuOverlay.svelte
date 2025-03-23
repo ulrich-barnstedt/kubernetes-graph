@@ -27,10 +27,6 @@
 {/if}
 
 <style>
-    * {
-        font-family: monospace;
-    }
-
     .content {
         padding: 10px 30px 10px 20px;
         overflow-y: auto;

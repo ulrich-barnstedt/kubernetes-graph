@@ -26,8 +26,4 @@
     option {
         background: black;
     }
-
-    * {
-        font-family: monospace;
-    }
 </style>

@@ -6,7 +6,7 @@
     let {selectedObjectTypes = $bindable()} : {selectedObjectTypes: string[]} = $props();
 </script>
 
-<Section header="Rules">
+<Section header="Object types">
     {#await specifications.objectTypes()}
         <p>
             Loading ...
