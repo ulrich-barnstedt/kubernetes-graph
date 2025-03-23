@@ -4,7 +4,10 @@ import type {ClusterData} from "../k8sFetch";
 import {objectByName} from "$lib/aggregate/rules/_utils";
 
 export default {
-    requiredData: [],
+    requiredData: [
+        "daemonSets",
+        "serviceAccounts"
+    ],
     execute: function (data: ClusterData, graph: Graph): void {
         for (const daemonSet of data.daemonSets.items) {
             if (!daemonSet.spec?.template.spec?.serviceAccountName) continue;

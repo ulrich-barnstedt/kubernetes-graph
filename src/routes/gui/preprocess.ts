@@ -1,13 +1,5 @@
 import {Graph} from "$lib/graph/Graph";
-import {deserialize} from "@ungap/structured-clone";
 import {ColorMap, createColorIterator} from "$lib/colors";
-
-export const getCurrentGraph = async () : Promise<Graph> => {
-    const apiResponse = await fetch("/api/graphData");
-    const json = await apiResponse.json();
-
-    return Graph.fromSerialized(deserialize(json));
-}
 
 export const preprocessData = (graph: Graph, hiddenTypes: string[] = []) : {data: any}[] => {
     const hiddenTypesMap = Object.fromEntries(hiddenTypes.map(t => [t, t]));

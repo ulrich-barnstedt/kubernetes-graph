@@ -9,14 +9,13 @@ TBD after UI rewrite
 
 ## TODO
 
-- Port to SvelteKit
 - Frontend with selectors for
   - Rules
   - Types
-- New backend for handling rules & types to show
-- Rules module in own files
 - Color scheme options
 - Namespace selector in UI?
+- Role binding explicit or implicit resolve?
+  - Fix support table below accordingly
 
 
 ## Kubernetes objects support

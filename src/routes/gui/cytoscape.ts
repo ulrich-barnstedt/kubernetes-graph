@@ -1,9 +1,16 @@
 import cytoscape, {type NodeSingular} from "cytoscape";
 import euler, {type EulerLayoutOptions} from 'cytoscape-euler';
-import {getCurrentGraph, preprocessData} from "./graphData";
+import {preprocessData} from "./preprocess";
+import {aggregate, getObjectTypes, getRules} from "./apiHelper";
 
 export const setupCytoscape = async (containerElement: HTMLElement) : Promise<cytoscape.Core> => {
-    const apiGraph = await getCurrentGraph();
+    const rules = await getRules();
+    const objectTypes = await getObjectTypes();
+    const apiGraph = await aggregate({
+        objectTypes: objectTypes.defaultSelected,
+        rules: rules.defaultSelected
+    });
+
     // TODO: implement new filtering system from GUI
     const transformedData = preprocessData(apiGraph, []);
 

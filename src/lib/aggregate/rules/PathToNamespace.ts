@@ -1,7 +1,7 @@
 import type {Rule} from "$lib/aggregate/ruleType";
 import type {Graph} from "$lib/graph/Graph";
 import type {ClusterData} from "../k8sFetch";
-import type {KubernetesObject} from "@kubernetes/client-node";
+import type {KubernetesListObject, KubernetesObject} from "@kubernetes/client-node";
 import {GraphNode} from "$lib/graph/GraphNode";
 import {objectByName} from "$lib/aggregate/rules/_utils";
 
@@ -25,32 +25,33 @@ const findNamespaceObject = (node: GraphNode, visited: GraphNode[]) : GraphNode 
     return null;
 }
 
+// ensure all objects have a direct path to their namespace
 export default {
     requiredData: [
         "namespaces"
     ],
     execute: function (data: ClusterData, graph: Graph): void {
-        // ensure all objects have a direct path to their namespace
         // order of connections is important, excludes: namespace, node
-        const prioritizedObjectList: KubernetesObject[] = [
-            ...data.deployments.items,
-            ...data.replicationControllers.items,
-            ...data.replicaSets.items,
+        const prioritizedLists: KubernetesListObject<any>[] = [
+            data.deployments,
+            data.replicationControllers,
+            data.replicaSets,
 
-            ...data.statefulSets.items,
-            ...data.daemonSets.items,
+            data.statefulSets,
+            data.daemonSets,
 
-            ...data.pods.items,
+            data.pods,
 
-            ...data.roles.items,
-            ...data.serviceAccounts.items,
+            data.roles,
+            data.serviceAccounts,
 
-            ...data.endpoints.items,
-            ...data.services.items,
-            ...data.jobs.items
+            data.endpoints,
+            data.services,
+            data.jobs
         ]
+        const objectList = prioritizedLists.filter(l => l).map(l => l.items).flat();
 
-        for (const obj of prioritizedObjectList) {
+        for (const obj of objectList) {
             if (!obj.metadata?.namespace) continue;
 
             const node = graph.getNodeById(obj.metadata.uid!);
