@@ -3,8 +3,8 @@ import {createRoleResolver} from "$lib/aggregate/rules/utils/createRoleResolver"
 
 export default {
     requiredData: [
-        "roles",
-        "roleBindings",
+        "clusterRoles",
+        "clusterRoleBindings",
     ],
-    execute: createRoleResolver("roleBindings")
+    execute: createRoleResolver("clusterRoleBindings")
 } satisfies Rule;

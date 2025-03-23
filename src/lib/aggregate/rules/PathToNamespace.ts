@@ -1,9 +1,9 @@
 import type {Rule} from "$lib/aggregate/ruleType";
 import type {Graph} from "$lib/graph/Graph";
 import type {ClusterData} from "../k8sFetch";
-import type {KubernetesListObject, KubernetesObject} from "@kubernetes/client-node";
+import type {KubernetesListObject} from "@kubernetes/client-node";
 import {GraphNode} from "$lib/graph/GraphNode";
-import {objectByName} from "$lib/aggregate/rules/_utils";
+import {objectByName} from "$lib/aggregate/rules/utils/utils";
 
 const findNamespaceObject = (node: GraphNode, visited: GraphNode[]) : GraphNode | null => {
     if (node.kind === "V1Namespace") return node;

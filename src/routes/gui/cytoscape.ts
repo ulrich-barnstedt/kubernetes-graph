@@ -7,8 +7,8 @@ export const setupCytoscape = async (containerElement: HTMLElement) : Promise<cy
     const rules = await getRules();
     const objectTypes = await getObjectTypes();
     const apiGraph = await aggregate({
-        objectTypes: objectTypes.defaultSelected,
-        rules: rules.defaultSelected
+        objectTypes: objectTypes.available,
+        rules: rules.available
     });
 
     // TODO: implement new filtering system from GUI

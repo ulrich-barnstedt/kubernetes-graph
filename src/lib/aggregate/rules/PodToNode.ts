@@ -1,7 +1,7 @@
 import type {Rule} from "$lib/aggregate/ruleType";
 import type {Graph} from "$lib/graph/Graph";
 import type {ClusterData} from "../k8sFetch";
-import {objectByName} from "$lib/aggregate/rules/_utils";
+import {objectByName} from "$lib/aggregate/rules/utils/utils";
 
 export default {
     requiredData: [

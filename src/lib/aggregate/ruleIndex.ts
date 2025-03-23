@@ -8,13 +8,15 @@ import EndpointToAddress from "$lib/aggregate/rules/EndpointToAddress";
 import ResolveRoleBindings from "$lib/aggregate/rules/ResolveRoleBinding";
 import OwnerReference from "$lib/aggregate/rules/OwnerReference";
 import PathToNamespace from "$lib/aggregate/rules/PathToNamespace";
+import ResolveClusterRoleBinding from "$lib/aggregate/rules/ResolveClusterRoleBinding";
 
 export const aggregationRules = {
     "Pod -> Node": NodeToPod,
     "DaemonSet -> ServiceAccount": DaemonSetToServiceAccount,
     "Service -> Pod": ServiceToPod,
     "Endpoint -> [Address]": EndpointToAddress,
-    "Role -> [RoleBinding] -> [Subject]": ResolveRoleBindings,
+    "ClusterRole -> ClusterRoleBinding -> [Subject]": ResolveClusterRoleBinding,
+    "Role -> RoleBinding -> [Subject]": ResolveRoleBindings,
     "[*] -> [OwnerReference]": OwnerReference,
     "[*] -> [...] -> Namespace": PathToNamespace
 } satisfies Record<string, Rule>;
@@ -25,7 +27,8 @@ export const defaultRules: (keyof AggregationRules)[] = [
     "DaemonSet -> ServiceAccount",
     "Service -> Pod",
     "Endpoint -> [Address]",
-    "Role -> [RoleBinding] -> [Subject]",
+    "ClusterRole -> ClusterRoleBinding -> [Subject]",
+    "Role -> RoleBinding -> [Subject]",
     "[*] -> [OwnerReference]",
     "[*] -> [...] -> Namespace"
 ]
