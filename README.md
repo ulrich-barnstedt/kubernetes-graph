@@ -1,4 +1,4 @@
-# Kube-D3
+# Kubernetes-Graph-Visualizer
 
 WebGL accelerated kubernetes cluster visualization, powered by [`cytoscape`](https://js.cytoscape.org/).
 
@@ -21,9 +21,9 @@ Run the build with Node.js:
 ORIGIN=http://localhost:8000 PORT=8000 node build
 ```
 
-The GUI should be accessible under [`http://localhost:8000/gui`](http://localhost:8000/gui);
+The GUI should be accessible under [`http://localhost:8000/gui`](http://localhost:8000/gui).
 
-The kubernetes-client uses your local configuration by default, connecting to the same API server as `kubectl` normally would.
+Per default, the kubernetes API server configured in `~/.kube/config` will be used.
 For advanced usage (such as exposing the server on your network) see the [node-adapter](https://svelte.dev/docs/kit/adapter-node) docs.
 
 
