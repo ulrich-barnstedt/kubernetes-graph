@@ -8,8 +8,10 @@ export const setupCytoscape = async (containerElement: HTMLElement) : Promise<cy
     const objectTypes = await getObjectTypes();
     const apiGraph = await aggregate({
         objectTypes: objectTypes.available,
-        rules: rules.available
+        rules: rules.available,
+        namespace: "default"
     });
+    // TODO: add warning to GUI that namespacing does not affect some types
 
     // TODO: implement new filtering system from GUI
     const transformedData = preprocessData(apiGraph, []);

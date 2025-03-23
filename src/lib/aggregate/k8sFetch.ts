@@ -2,22 +2,22 @@ import {type KubernetesListObject} from "@kubernetes/client-node";
 import {kube} from "$lib/aggregate/k8sClient";
 import type {AwaitedValuesRecord, ExecutedFunctionsRecord, PromiseValuesRecord, ValueOf} from "$lib/typeHelpers";
 
-type DataFetcher = () => Promise<KubernetesListObject<any>>;
+type DataFetcher = (namespace: string) => Promise<KubernetesListObject<any>>;
 export const supportedObjectTypes = {
-    deployments: () => kube.apps.listDeploymentForAllNamespaces(),
-    pods: () => kube.core.listPodForAllNamespaces(),
+    deployments: (namespace) => kube.apps.listNamespacedDeployment({namespace}),
+    pods: (namespace) => kube.core.listNamespacedPod({namespace}),
     nodes: () => kube.core.listNode(),
     namespaces: () => kube.core.listNamespace(),
-    services: () => kube.core.listServiceForAllNamespaces(),
-    serviceAccounts: () => kube.core.listServiceAccountForAllNamespaces(),
-    replicationControllers: () => kube.core.listReplicationControllerForAllNamespaces(),
-    replicaSets: () => kube.apps.listReplicaSetForAllNamespaces(),
-    endpoints: () => kube.core.listEndpointsForAllNamespaces(),
-    statefulSets: () => kube.apps.listStatefulSetForAllNamespaces(),
-    daemonSets: () => kube.apps.listDaemonSetForAllNamespaces(),
-    jobs: () => kube.batch.listJobForAllNamespaces(),
-    roles: () => kube.rbac.listRoleForAllNamespaces(),
-    roleBindings: () => kube.rbac.listRoleBindingForAllNamespaces(),
+    services: (namespace) => kube.core.listNamespacedService({namespace}),
+    serviceAccounts: (namespace) => kube.core.listNamespacedServiceAccount({namespace}),
+    replicationControllers: (namespace) => kube.core.listNamespacedReplicationController({namespace}),
+    replicaSets: (namespace) => kube.apps.listNamespacedReplicaSet({namespace}),
+    endpoints: (namespace) => kube.core.listNamespacedEndpoints({namespace}),
+    statefulSets: (namespace) => kube.apps.listNamespacedStatefulSet({namespace}),
+    daemonSets: (namespace) => kube.apps.listNamespacedDaemonSet({namespace}),
+    jobs: (namespace) => kube.batch.listNamespacedJob({namespace}),
+    roles: (namespace) => kube.rbac.listNamespacedRole({namespace}),
+    roleBindings: (namespace) => kube.rbac.listNamespacedRoleBinding({namespace}),
     clusterRoles: () => kube.rbac.listClusterRole(),
     clusterRoleBindings: () => kube.rbac.listClusterRoleBinding()
 } satisfies Record<string, DataFetcher>;
@@ -49,11 +49,11 @@ const parallelizePromises = async <T extends PromiseValuesRecord> (obj: T): Prom
     ) as AwaitedValuesRecord<T>;
 }
 
-export const fetchClusterData = async (requestedEndpoints: (keyof ClusterData)[]) : Promise<Partial<ClusterData>> => {
+export const fetchClusterData = async (requestedEndpoints: (keyof ClusterData)[], namespace: string) : Promise<Partial<ClusterData>> => {
     const data = Object.fromEntries(
         requestedEndpoints
             .filter(k => k in supportedObjectTypes)
-            .map(k => [k, supportedObjectTypes[k]()])
+            .map(k => [k, supportedObjectTypes[k](namespace)])
     );
     return await parallelizePromises(data);
 }
