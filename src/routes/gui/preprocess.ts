@@ -1,8 +1,7 @@
 import {Graph} from "$lib/graph/Graph";
 import {ColorMap, createColorIterator} from "$lib/colors";
 
-export const preprocessData = (graph: Graph, hiddenTypes: string[] = []) : {data: any}[] => {
-    const hiddenTypesMap = Object.fromEntries(hiddenTypes.map(t => [t, t]));
+export const preprocessData = (graph: Graph) : {data: any}[] => {
     const elements = [];
     const kindColorMap = new ColorMap(createColorIterator(40, 75));
     const namespaceColorMap = new ColorMap(createColorIterator(40, 75));
@@ -27,10 +26,6 @@ export const preprocessData = (graph: Graph, hiddenTypes: string[] = []) : {data
     }
 
     for (const node of graph.getAllNodes()) {
-        if (node.kind in hiddenTypesMap) {
-            continue;
-        }
-
         elements.push({
             data: {
                 name: node.kubeObj.metadata?.name!,
@@ -41,9 +36,6 @@ export const preprocessData = (graph: Graph, hiddenTypes: string[] = []) : {data
         })
     }
     for (const relation of graph.getAllRelations()) {
-        if (relation.from.kind in hiddenTypesMap || relation.to.kind in hiddenTypesMap) {
-            continue;
-        }
         let namespace = relation.from.kubeObj.metadata?.namespace! || relation.to.kubeObj.metadata?.namespace!;
 
         elements.push({
@@ -58,4 +50,3 @@ export const preprocessData = (graph: Graph, hiddenTypes: string[] = []) : {data
 
     return elements;
 }
-

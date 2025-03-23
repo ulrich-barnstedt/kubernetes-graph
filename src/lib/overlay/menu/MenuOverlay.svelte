@@ -3,11 +3,9 @@
     import Namespace from "$lib/overlay/menu/Namespace.svelte";
     import Rules from "$lib/overlay/menu/Rules.svelte";
     import ObjectTypes from "$lib/overlay/menu/ObjectTypes.svelte";
+    import {aggregationSpecification} from "$lib/state/aggregationSpecification.svelte";
 
     let visible = $state(false);
-    let namespace = $state("");
-    let rules = $state([]);
-    let objectTypes = $state([]);
 </script>
 
 <button class="showButton" onclick={() => visible = true}>
@@ -20,9 +18,9 @@
         </button>
         <div class="content">
             <div>
-                <Namespace bind:selectedNamespace={namespace}/>
-                <ObjectTypes bind:selectedObjectTypes={objectTypes}/>
-                <Rules bind:selectedRules={rules}/>
+                <Namespace bind:selectedNamespace={aggregationSpecification.namespace}/>
+                <ObjectTypes bind:selectedObjectTypes={aggregationSpecification.objectTypes}/>
+                <Rules bind:selectedRules={aggregationSpecification.rules}/>
             </div>
         </div>
     </OverlayContainer>
@@ -56,4 +54,3 @@
         background: #222225;
     }
 </style>
-

@@ -1,18 +1,13 @@
 <script lang="ts">
     import MultiSelect from "$lib/components/MultiSelect.svelte";
     import Section from "$lib/overlay/menu/Section.svelte";
-    import {getObjectTypes} from "$lib/helpers/apiHelper";
+    import {specifications} from "$lib/state/specifications";
 
     let {selectedObjectTypes = $bindable()} : {selectedObjectTypes: string[]} = $props();
-    let objectTypes = getObjectTypes();
-
-    objectTypes.then(o => {
-        selectedObjectTypes = o.defaultSelected
-    })
 </script>
 
 <Section header="Rules">
-    {#await objectTypes}
+    {#await specifications.objectTypes()}
         <p>
             Loading ...
         </p>
