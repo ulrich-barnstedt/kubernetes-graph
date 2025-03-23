@@ -8,6 +8,7 @@
     import {aggregate} from "$lib/helpers/apiHelper";
     import {aggregationSpecification} from "$lib/state/aggregationSpecification.svelte";
     import type {AggregationSpec} from "../api/aggregate/+server";
+    import {forcedUpdatePropagator} from "$lib/state/forcedUpdatePropagator";
 
     let cyContainer: HTMLElement;
     // @ts-ignore cy is always set, ignore undefined
@@ -39,6 +40,7 @@
         if (!aggregationSpecification.isInitialized()) return;
         updateGraph();
     })
+    forcedUpdatePropagator.listen(() => updateGraph());
 </script>
 
 <MenuOverlay/>

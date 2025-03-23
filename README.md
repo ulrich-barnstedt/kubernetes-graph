@@ -1,19 +1,16 @@
 # Kube-D3
 
-Kubernetes cluster visualization, in the browser
+WebGL accelerated kubernetes cluster visualization, powered by [`cytoscape`](https://js.cytoscape.org/).
 
-## Demo
 
-TBD after UI rewrite
+## Examples
+
+TBD
 
 
 ## TODO
 
-- Frontend with selectors for
-  - Rules
-  - Types
 - Color scheme options
-- Namespace selector in UI?
 
 
 ## Kubernetes objects support
