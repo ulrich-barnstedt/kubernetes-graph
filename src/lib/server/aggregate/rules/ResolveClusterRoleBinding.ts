@@ -1,5 +1,5 @@
-import type {Rule} from "$lib/aggregate/ruleType";
-import {createRoleResolver} from "$lib/aggregate/rules/utils/createRoleResolver";
+import type {Rule} from "$lib/server/aggregate/ruleType";
+import {createRoleResolver} from "$lib/server/aggregate/rules/utils/createRoleResolver";
 
 export default {
     requiredData: [

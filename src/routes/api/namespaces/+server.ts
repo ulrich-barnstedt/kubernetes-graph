@@ -1,4 +1,4 @@
-import {kube} from "$lib/aggregate/k8sClient";
+import {kube} from "$lib/server/aggregate/k8sClient";
 import {json} from "@sveltejs/kit";
 
 export const GET = async () => {

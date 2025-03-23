@@ -1,4 +1,4 @@
-import type {ClusterData} from "$lib/aggregate/k8sFetch";
+import type {ClusterData} from "$lib/server/aggregate/k8sFetch";
 import type {Graph} from "$lib/graph/Graph";
 
 export interface Rule {

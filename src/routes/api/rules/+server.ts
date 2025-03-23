@@ -1,4 +1,4 @@
-import {aggregationRules, type AggregationRules, defaultRules} from "$lib/aggregate/ruleIndex";
+import {aggregationRules, type AggregationRules, defaultRules} from "$lib/server/aggregate/ruleIndex";
 import {json} from "@sveltejs/kit";
 import type {SelectableSpec} from "../SelectableSpec";
 

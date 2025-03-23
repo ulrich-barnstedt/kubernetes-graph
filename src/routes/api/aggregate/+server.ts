@@ -1,8 +1,8 @@
 import {serialize} from "@ungap/structured-clone";
 import {json} from "@sveltejs/kit";
-import {constructAggregatedGraph} from "$lib/aggregate/aggregate";
-import type {ClusterData} from "$lib/aggregate/k8sFetch";
-import type {AggregationRules} from "$lib/aggregate/ruleIndex";
+import {constructAggregatedGraph} from "$lib/server/aggregate/aggregate";
+import type {ClusterData} from "$lib/server/aggregate/k8sFetch";
+import type {AggregationRules} from "$lib/server/aggregate/ruleIndex";
 
 export interface AggregationSpec {
     objectTypes: (keyof ClusterData)[],

@@ -1,5 +1,5 @@
 import {type KubernetesListObject} from "@kubernetes/client-node";
-import {kube} from "$lib/aggregate/k8sClient";
+import {kube} from "$lib/server/aggregate/k8sClient";
 import type {AwaitedValuesRecord, ExecutedFunctionsRecord, PromiseValuesRecord, ValueOf} from "$lib/typeHelpers";
 
 type DataFetcher = (namespace: string) => Promise<KubernetesListObject<any>>;

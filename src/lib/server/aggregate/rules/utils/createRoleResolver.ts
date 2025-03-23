@@ -1,7 +1,7 @@
-import type {Rule} from "$lib/aggregate/ruleType";
-import type {ClusterData} from "$lib/aggregate/k8sFetch";
+import type {Rule} from "$lib/server/aggregate/ruleType";
+import type {ClusterData} from "$lib/server/aggregate/k8sFetch";
 import type {Graph} from "$lib/graph/Graph";
-import {namespacedObjectByName, objectByName} from "$lib/aggregate/rules/utils/utils";
+import {namespacedObjectByName, objectByName} from "$lib/server/aggregate/rules/utils/utils";
 import {V1ClusterRoleBindingList, V1ClusterRoleList, V1RoleBindingList, V1RoleList} from "@kubernetes/client-node";
 import type {ValueOf} from "$lib/typeHelpers";
 

@@ -1,4 +1,4 @@
-import {type ClusterData, defaultObjectTypes, supportedObjectTypes} from "$lib/aggregate/k8sFetch";
+import {type ClusterData, defaultObjectTypes, supportedObjectTypes} from "$lib/server/aggregate/k8sFetch";
 import {json} from "@sveltejs/kit";
 import type {SelectableSpec} from "../SelectableSpec";
 

@@ -1,5 +1,5 @@
-import {type ClusterData, fetchClusterData} from "$lib/aggregate/k8sFetch";
-import {type AggregationRules, executeRules} from "$lib/aggregate/ruleIndex";
+import {type ClusterData, fetchClusterData} from "$lib/server/aggregate/k8sFetch";
+import {type AggregationRules, executeRules} from "$lib/server/aggregate/ruleIndex";
 import {Graph} from "$lib/graph/Graph";
 import {GraphNode} from "$lib/graph/GraphNode";
 
