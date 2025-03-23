@@ -9,6 +9,14 @@ WebGL accelerated kubernetes cluster visualization, powered by [`cytoscape`](htt
 ![Example screenshot with description open](./assets/description.png)
 
 
+## Colors & links
+
+All nodes are colored depending on their type (for example, all `pods` in the screenshot above are colored cyan).
+
+Links between nodes are created according to rules, which can be toggled in the UI.
+These links are color-coded depending on namespaces, with non-namespaced links being white.
+
+
 ## Usage
 
 Create a production build using npm:
