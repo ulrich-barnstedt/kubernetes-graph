@@ -1,18 +1,36 @@
-import NodeToPod from "$lib/aggregate/rules/NodeToPod";
 import type {Rule} from "$lib/aggregate/ruleType";
 import type {ClusterData} from "$lib/aggregate/k8sFetch";
 import type {Graph} from "$lib/graph/Graph";
+import DaemonSetToServiceAccount from "$lib/aggregate/rules/DaemonSetToServiceAccount";
+import NodeToPod from "$lib/aggregate/rules/PodToNode";
+import ServiceToPod from "$lib/aggregate/rules/ServiceToPod";
+import EndpointToAddress from "$lib/aggregate/rules/EndpointToAddress";
+import ResolveRoleBindings from "$lib/aggregate/rules/ResolveRoleBinding";
+import OwnerReference from "$lib/aggregate/rules/OwnerReference";
+import PathToNamespace from "$lib/aggregate/rules/PathToNamespace";
 
 export const aggregationRules = {
-    "Node -> Pod": NodeToPod
+    "Pod -> Node": NodeToPod,
+    "DaemonSet -> ServiceAccount": DaemonSetToServiceAccount,
+    "Service -> Pod": ServiceToPod,
+    "Endpoint -> [Address]": EndpointToAddress,
+    "Role -> [RoleBinding] -> [Subject]": ResolveRoleBindings,
+    "[*] -> [OwnerReference]": OwnerReference,
+    "[*] -> [...] -> Namespace": PathToNamespace
 } satisfies Record<string, Rule>;
 export type AggregationRules = typeof aggregationRules;
 
 export const defaultRules: (keyof AggregationRules)[] = [
-    "Node -> Pod"
+    "Pod -> Node",
+    "DaemonSet -> ServiceAccount",
+    "Service -> Pod",
+    "Endpoint -> [Address]",
+    "Role -> [RoleBinding] -> [Subject]",
+    "[*] -> [OwnerReference]",
+    "[*] -> [...] -> Namespace"
 ]
 
-export const executeRules = (
+export const executeRules = async (
     data: Partial<ClusterData>,
     graph: Graph,
     rules: (keyof AggregationRules)[]
@@ -29,6 +47,6 @@ export const executeRules = (
         if (!dataSatisfied) continue;
 
         // safe to cast, as it has been ensured all required data is present
-        aggregationRules[ruleName].execute(data as ClusterData, graph);
+        await aggregationRules[ruleName].execute(data as ClusterData, graph);
     }
 }

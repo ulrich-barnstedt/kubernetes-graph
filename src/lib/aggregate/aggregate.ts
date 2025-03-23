@@ -9,7 +9,7 @@ export const constructAggregatedGraph = async (types: (keyof ClusterData)[], rul
     const nodes = Object.values(data).map(list => list.items).flat().map((obj) => new GraphNode(obj));
 
     graph.addNodes(...nodes);
-    executeRules(data, graph, rules);
+    await executeRules(data, graph, rules);
 
     return graph;
 }
