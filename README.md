@@ -5,12 +5,32 @@ WebGL accelerated kubernetes cluster visualization, powered by [`cytoscape`](htt
 
 ## Examples
 
-TBD
+![Example screenshot with menu open](./assets/menu.png)
+![Example screenshot with description open](./assets/description.png)
 
 
-## TODO
+## Usage
 
-- Color scheme options
+Create a production build using npm:
+```sh
+npm run build
+```
+
+Run the build with Node.js:
+```sh
+ORIGIN=http://localhost:8000 PORT=8000 node build
+```
+
+The GUI should be accessible under [`http://localhost:8000/gui`](http://localhost:8000/gui);
+
+The kubernetes-client uses your local configuration by default, connecting to the same API server as `kubectl` normally would.
+For advanced usage (such as exposing the server on your network) see the [node-adapter](https://svelte.dev/docs/kit/adapter-node) docs.
+
+
+## Future roadmap
+
+- Support for color schemes
+- Support for other types of objects / more rules
 
 
 ## Kubernetes objects support
