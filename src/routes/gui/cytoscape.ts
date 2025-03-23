@@ -1,7 +1,7 @@
 import cytoscape, {type NodeSingular} from "cytoscape";
 import euler, {type EulerLayoutOptions} from 'cytoscape-euler';
 import {preprocessData} from "./preprocess";
-import {aggregate, getObjectTypes, getRules} from "./apiHelper";
+import {aggregate, getObjectTypes, getRules} from "$lib/helpers/apiHelper";
 
 export const setupCytoscape = async (containerElement: HTMLElement) : Promise<cytoscape.Core> => {
     const rules = await getRules();

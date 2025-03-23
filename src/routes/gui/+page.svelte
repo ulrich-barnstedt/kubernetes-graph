@@ -1,9 +1,9 @@
 <script lang="ts">
     import {setupCytoscape} from "./cytoscape";
     import {onMount} from "svelte";
-    import ObjectDescriptionOverlay from "$lib/overlay/ObjectDescriptionOverlay.svelte";
+    import ObjectDescriptionOverlay from "$lib/overlay/description/ObjectDescriptionOverlay.svelte";
     import cytoscape from "cytoscape";
-    import MenuOverlay from "$lib/overlay/MenuOverlay.svelte";
+    import MenuOverlay from "$lib/overlay/menu/MenuOverlay.svelte";
 
     let cyContainer: HTMLElement;
     let cy: cytoscape.Core;

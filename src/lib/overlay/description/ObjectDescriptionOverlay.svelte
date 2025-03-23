@@ -71,7 +71,7 @@
 
 <style>
     .overlay-header {
-        font-size: 15px;
+        font-size: 16px;
         color: #61afef;
         padding: 12px 20px 12px 25px;
         background: #191920;
