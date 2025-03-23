@@ -4,6 +4,7 @@
     import Highlight from "svelte-highlight";
     import {yaml} from "svelte-highlight/languages";
     import 'highlight.js/styles/atom-one-dark.css';
+    import OverlayContainer from "$lib/overlay/OverlayContainer.svelte";
 
     const {cy} : {cy: cytoscape.Core} = $props();
     let showOverlay = $state(false);
@@ -51,7 +52,7 @@
     </style>
 </svelte:head>
 {#if showOverlay}
-    <div class="overlay-container">
+    <OverlayContainer borderDirection="left" right={0} top={0}>
         <div class="overlay-header">
             <b>{objectName}</b>
             <br/>
@@ -61,32 +62,14 @@
         </div>
         <div class="overlay-content">
             <Highlight
-                language={yaml}
-                code={objectYAML}
+                    language={yaml}
+                    code={objectYAML}
             />
         </div>
-    </div>
+    </OverlayContainer>
 {/if}
 
 <style>
-    .overlay-container {
-        position: absolute;
-        right: 0;
-        top: 0;
-        z-index: 100;
-        display: flex;
-
-        height: 100vh;
-        width: fit-content;
-        min-width: 30vw;
-        max-width: 50vw;
-
-        background: #111113;
-        color: white;
-        flex-direction: column;
-        border-left: 1px solid #555555;
-    }
-
     .overlay-header {
         font-size: 15px;
         color: #61afef;

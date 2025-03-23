@@ -1,8 +1,9 @@
 <script lang="ts">
     import {setupCytoscape} from "./cytoscape";
     import {onMount} from "svelte";
-    import Overlay from "$lib/overlay/Overlay.svelte";
+    import ObjectDescriptionOverlay from "$lib/overlay/ObjectDescriptionOverlay.svelte";
     import cytoscape from "cytoscape";
+    import MenuOverlay from "$lib/overlay/MenuOverlay.svelte";
 
     let cyContainer: HTMLElement;
     let cy: cytoscape.Core;
@@ -12,8 +13,9 @@
     })
 </script>
 
+<MenuOverlay/>
 {#if cy}
-    <Overlay cy={cy}/>
+    <ObjectDescriptionOverlay cy={cy}/>
 {/if}
 <div class="fill" bind:this={cyContainer}></div>
 
