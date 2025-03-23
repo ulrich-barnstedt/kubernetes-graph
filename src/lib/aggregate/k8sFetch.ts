@@ -2,6 +2,7 @@ import {type KubernetesListObject} from "@kubernetes/client-node";
 import {kube} from "$lib/aggregate/k8sClient";
 import type {AwaitedValuesRecord, ExecutedFunctionsRecord, PromiseValuesRecord, ValueOf} from "$lib/typeHelpers";
 
+type DataFetcher = () => Promise<KubernetesListObject<any>>;
 export const supportedObjectTypes = {
     deployments: () => kube.apps.listDeploymentForAllNamespaces(),
     pods: () => kube.core.listPodForAllNamespaces(),
@@ -19,7 +20,7 @@ export const supportedObjectTypes = {
     roleBindings: () => kube.rbac.listRoleBindingForAllNamespaces(),
     clusterRoles: () => kube.rbac.listClusterRole(),
     clusterRoleBindings: () => kube.rbac.listClusterRoleBinding()
-} satisfies Record<string, () => Promise<KubernetesListObject<any>>>;
+} satisfies Record<string, DataFetcher>;
 export type ClusterData = AwaitedValuesRecord<ExecutedFunctionsRecord<typeof supportedObjectTypes>>;
 
 export const defaultObjectTypes: (keyof ClusterData)[] = [
@@ -32,7 +33,7 @@ export const defaultObjectTypes: (keyof ClusterData)[] = [
     "replicaSets"
 ]
 
-const parallelizeValues = async <T extends PromiseValuesRecord> (obj: T): Promise<AwaitedValuesRecord<T>> => {
+const parallelizePromises = async <T extends PromiseValuesRecord> (obj: T): Promise<AwaitedValuesRecord<T>> => {
     const [keys, promises] = Object.entries(obj).reduce<[(keyof T)[], Promise<ValueOf<T>>[]]>((acc, val) => {
         acc[0].push(val[0]);
         acc[1].push(val[1]);
@@ -54,5 +55,5 @@ export const fetchClusterData = async (requestedEndpoints: (keyof ClusterData)[]
             .filter(k => k in supportedObjectTypes)
             .map(k => [k, supportedObjectTypes[k]()])
     );
-    return await parallelizeValues(data);
+    return await parallelizePromises(data);
 }

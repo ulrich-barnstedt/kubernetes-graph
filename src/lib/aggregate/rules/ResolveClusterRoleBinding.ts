@@ -6,5 +6,5 @@ export default {
         "clusterRoles",
         "clusterRoleBindings",
     ],
-    execute: createRoleResolver("clusterRoleBindings")
+    execute: createRoleResolver("clusterRoleBindings", "clusterRoles")
 } satisfies Rule;

@@ -12,6 +12,6 @@ export class GraphRelation {
         this.sameNamespace =
             this.to.kind === "V1Namespace" ||
             this.from.kind === "V1Namespace" ||
-            this.from.kubeObj.metadata?.namespace! === this.to.kubeObj.metadata?.namespace!;
+            (this.from.kubeObj.metadata?.namespace! === this.to.kubeObj.metadata?.namespace! && !!this.from.kubeObj.metadata?.namespace);
     }
 }

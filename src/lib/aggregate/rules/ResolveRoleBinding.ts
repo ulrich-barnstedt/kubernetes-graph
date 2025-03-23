@@ -6,5 +6,5 @@ export default {
         "roles",
         "roleBindings",
     ],
-    execute: createRoleResolver("roleBindings")
+    execute: createRoleResolver("roleBindings", "roles")
 } satisfies Rule;
