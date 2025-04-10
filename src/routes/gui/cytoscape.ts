@@ -1,5 +1,6 @@
 import cytoscape, {type NodeSingular} from "cytoscape";
 import euler, {type EulerLayoutOptions} from 'cytoscape-euler';
+import {iconState} from "$lib/overlay/menu/iconMap.svelte";
 
 export const layoutConfig: EulerLayoutOptions = {
     name: "euler",
@@ -10,7 +11,7 @@ export const layoutConfig: EulerLayoutOptions = {
         const data = node.data();
         const connections = data.incoming.length + data.outgoing.length;
         const mass =
-            ((connections === 0 ? 1 : connections) * 8) +
+            ((connections === 0 ? 1 : connections) * (iconState.display ? 10 : 8)) +
             (data.name.length * 0.5);
 
         // WARNING: returning 0 will cause INFINITE ram usage
@@ -32,6 +33,15 @@ export const setupCytoscape = (containerElement: HTMLElement) : cytoscape.Core =
                     color: "white",
                     height: "data(height)",
                     width: "data(width)",
+                }
+            },
+            {
+                selector: "node[icon]",
+                style: {
+                    "background-opacity": 0,
+                    'background-image': "data(icon)",
+                    'background-clip': "none",
+                    "background-fit": "cover",
                 }
             },
             {

@@ -6,8 +6,14 @@
     import {aggregationSpecification} from "$lib/state/aggregationSpecification.svelte";
     import {forcedUpdatePropagator} from "$lib/state/forcedUpdatePropagator";
     import Section from "$lib/overlay/menu/Section.svelte";
+    import {iconState} from "./iconMap.svelte.js";
 
     let visible = $state(false);
+
+    const toggleIcons = () => {
+        iconState.display = !iconState.display;
+        forcedUpdatePropagator.run();
+    }
 </script>
 
 <button class="show-button borderless-button" onclick={() => visible = true}>
@@ -27,6 +33,9 @@
                 <Section header="Actions">
                     <button class="border-button" onclick={() => forcedUpdatePropagator.run()}>
                         Force update graph
+                    </button>
+                    <button class="border-button" onclick={toggleIcons}>
+                        {iconState.display ? "Hide" : "Show"} icons
                     </button>
                 </Section>
             </div>
