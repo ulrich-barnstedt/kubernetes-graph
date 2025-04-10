@@ -16,10 +16,14 @@ export const supportedObjectTypes = {
     statefulSets: (namespace) => kube.apps.listNamespacedStatefulSet({namespace}),
     daemonSets: (namespace) => kube.apps.listNamespacedDaemonSet({namespace}),
     jobs: (namespace) => kube.batch.listNamespacedJob({namespace}),
+    cronJobs: (namespace) => kube.batch.listNamespacedCronJob({namespace}),
     roles: (namespace) => kube.rbac.listNamespacedRole({namespace}),
     roleBindings: (namespace) => kube.rbac.listNamespacedRoleBinding({namespace}),
     clusterRoles: () => kube.rbac.listClusterRole(),
-    clusterRoleBindings: () => kube.rbac.listClusterRoleBinding()
+    clusterRoleBindings: () => kube.rbac.listClusterRoleBinding(),
+    secrets: (namespace) => kube.core.listNamespacedSecret({namespace}),
+    configMaps: (namespace) => kube.core.listNamespacedConfigMap({namespace}),
+    customResourceDefinitions: () => kube.extensions.listCustomResourceDefinition()
 } satisfies Record<string, DataFetcher>;
 export type ClusterData = AwaitedValuesRecord<ExecutedFunctionsRecord<typeof supportedObjectTypes>>;
 
@@ -34,7 +38,6 @@ export const defaultObjectTypes: (keyof ClusterData)[] = [
     "endpoints",
     "statefulSets",
     "daemonSets",
-    "jobs"
 ]
 
 const parallelizePromises = async <T extends PromiseValuesRecord> (obj: T): Promise<AwaitedValuesRecord<T>> => {

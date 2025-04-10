@@ -10,10 +10,14 @@ import endpointIcon from "kubernetes-icons/svg/resources/labeled/ep.svg";
 import statefulSetIcon from "kubernetes-icons/svg/resources/labeled/sts.svg";
 import daemonSetIcon from "kubernetes-icons/svg/resources/labeled/ds.svg";
 import jobIcon from "kubernetes-icons/svg/resources/labeled/job.svg";
+import cronJobIcon from "kubernetes-icons/svg/resources/labeled/cronjob.svg";
 import roleIcon from "kubernetes-icons/svg/resources/labeled/role.svg";
 import roleBindingIcon from "kubernetes-icons/svg/resources/labeled/rb.svg";
 import clusterRoleIcon from "kubernetes-icons/svg/resources/labeled/c-role.svg";
 import clusterRoleBindingIcon from "kubernetes-icons/svg/resources/labeled/crb.svg";
+import secretIcon from "kubernetes-icons/svg/resources/labeled/secret.svg";
+import configMapIcon from "kubernetes-icons/svg/resources/labeled/cm.svg";
+import customResourceDefinitionIcon from "kubernetes-icons/svg/resources/labeled/crd.svg";
 
 export const iconMap: Record<string, any> = {
     V1Deployment: deploymentIcon,
@@ -28,10 +32,14 @@ export const iconMap: Record<string, any> = {
     V1StatefulSet: statefulSetIcon,
     V1DaemonSet: daemonSetIcon,
     V1Job: jobIcon,
+    V1CronJob: cronJobIcon,
     V1Role: roleIcon,
     V1RoleBinding: roleBindingIcon,
     V1ClusterRole: clusterRoleIcon,
-    V1ClusterRoleBinding: clusterRoleBindingIcon
+    V1ClusterRoleBinding: clusterRoleBindingIcon,
+    V1Secret: secretIcon,
+    V1ConfigMap: configMapIcon,
+    V1CustomResourceDefinition: customResourceDefinitionIcon
 }
 
 class IconStateWrapper {

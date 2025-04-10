@@ -47,7 +47,11 @@ export default {
 
             data.endpoints,
             data.services,
-            data.jobs
+            data.jobs,
+            data.cronJobs,
+
+            data.secrets,
+            data.configMaps
         ]
         const objectList = prioritizedLists.filter(l => l).map(l => l.items).flat();
 
