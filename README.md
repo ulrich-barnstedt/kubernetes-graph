@@ -8,6 +8,9 @@ WebGL accelerated kubernetes cluster visualization, powered by [`cytoscape`](htt
 ![Example screenshot with menu open](./assets/menu.png)
 ![Example screenshot with description open](./assets/description.png)
 
+(Graph without Icons)
+![Example screenshot without icons](./assets/without-icons.png)
+
 
 ## Colors & links
 
