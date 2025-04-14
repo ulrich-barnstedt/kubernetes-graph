@@ -9,7 +9,9 @@
     import {aggregationSpecification} from "$lib/state/aggregationSpecification.svelte";
     import type {AggregationSpec} from "../api/aggregate/+server";
     import {forcedUpdatePropagator} from "$lib/state/forcedUpdatePropagator";
+    import LoadingOverlay from "$lib/overlay/loading/LoadingOverlay.svelte";
 
+    let loading: boolean = $state(true);
     let cyContainer: HTMLElement;
     // @ts-ignore cy is always set, ignore undefined
     let cy: cytoscape.Core = $state();
@@ -21,6 +23,7 @@
     })
 
     const updateGraph = async () => {
+        loading = true;
         const graph = await aggregate(derivedSpec);
         const transformedData = preprocessData(graph);
 
@@ -30,6 +33,8 @@
         })
         cy.layout(layoutConfig).run();
         cy.center();
+
+        loading = false;
     }
 
     onMount(async () => {
@@ -46,6 +51,9 @@
 <MenuOverlay/>
 {#if cy}
     <ObjectDescriptionOverlay cy={cy}/>
+{/if}
+{#if loading}
+    <LoadingOverlay/>
 {/if}
 <div class="fill" bind:this={cyContainer}></div>
 
