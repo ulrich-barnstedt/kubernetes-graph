@@ -1,4 +1,5 @@
 import {
+    type ApiConstructor,
     ApiextensionsV1Api,
     type ApiType,
     AppsV1Api,
@@ -11,12 +12,23 @@ import {
 export const kc = new KubeConfig();
 kc.loadFromDefault();
 
-export const kube = {
-    core: kc.makeApiClient(CoreV1Api),
-    apps: kc.makeApiClient(AppsV1Api),
-    batch: kc.makeApiClient(BatchV1Api),
-    rbac: kc.makeApiClient(RbacAuthorizationV1Api),
-    extensions: kc.makeApiClient(ApiextensionsV1Api)
-} satisfies Record<string, ApiType>
+class K8sClientWrapper {
+    public readonly validConfig: boolean = !!kc.getCurrentCluster();
 
-export type KubeClients = typeof kube;
+    private createAPIClient<T extends ApiType> (target: ApiConstructor<T>): T {
+        if (this.validConfig) {
+            return kc.makeApiClient(target);
+        } else {
+            // absolute anti-pattern, but checking each property separately wouldn't be clean either
+            return undefined as unknown as T;
+        }
+    }
+
+    public core = this.createAPIClient(CoreV1Api);
+    public apps = this.createAPIClient(AppsV1Api);
+    public batch = this.createAPIClient(BatchV1Api);
+    public rbac = this.createAPIClient(RbacAuthorizationV1Api);
+    public extensions = this.createAPIClient(ApiextensionsV1Api);
+}
+
+export const kube = new K8sClientWrapper();

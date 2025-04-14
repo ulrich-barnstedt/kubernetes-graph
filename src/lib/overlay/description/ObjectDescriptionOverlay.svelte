@@ -76,6 +76,9 @@
         padding: 12px 20px 12px 25px;
         background: #191920;
     }
+    .overlay-header > * {
+        font-size: inherit;
+    }
 
     .overlay-content {
         overflow: auto;

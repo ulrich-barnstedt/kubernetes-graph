@@ -57,6 +57,10 @@ const parallelizePromises = async <T extends PromiseValuesRecord> (obj: T): Prom
 }
 
 export const fetchClusterData = async (requestedEndpoints: (keyof ClusterData)[], namespace: string) : Promise<Partial<ClusterData>> => {
+    if (!kube.validConfig) {
+        throw "No valid kubernetes config found.";
+    }
+
     const data = Object.fromEntries(
         requestedEndpoints
             .filter(k => k in supportedObjectTypes)
