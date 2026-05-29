@@ -18,7 +18,7 @@ const findNamespaceObject = (node: GraphNode, visited: GraphNode[]) : GraphNode 
 
     for (const relatedNode of allRelations) {
         if (nodeVisited(relatedNode)) continue;
-        let result = findNamespaceObject(relatedNode, visited);
+        const result = findNamespaceObject(relatedNode, visited);
         if (result) return result;
     }
 

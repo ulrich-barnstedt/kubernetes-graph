@@ -40,7 +40,7 @@ export const preprocessData = (graph: Graph) : {data: any}[] => {
         })
     }
     for (const relation of graph.getAllRelations()) {
-        let namespace = relation.from.kubeObj.metadata?.namespace! || relation.to.kubeObj.metadata?.namespace!;
+        const namespace = relation.from.kubeObj.metadata?.namespace! || relation.to.kubeObj.metadata?.namespace!;
 
         elements.push({
             data: {

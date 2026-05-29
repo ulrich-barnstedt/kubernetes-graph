@@ -60,10 +60,9 @@ export const setupCytoscape = (containerElement: HTMLElement) : cytoscape.Core =
                 }
             }
         ],
-        wheelSensitivity: 0.3,
         autoungrabify: true,
         autounselectify: true,
-        // @ts-ignore
+        // @ts-expect-error render type is not known despite working
         renderer: {
             webgl: true,
             // showFps: true

@@ -36,7 +36,9 @@ export default ts.config(
     },
     {
         rules: {
-            "@typescript-eslint/no-explicit-any": "off"
+            // these rules are disabled as the code was written before they existed
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-non-null-asserted-optional-chain": "off"
         }
     }
 );

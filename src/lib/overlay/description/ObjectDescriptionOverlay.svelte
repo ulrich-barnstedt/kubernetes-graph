@@ -13,6 +13,8 @@
     let objectKind = $state("");
     let objectId = $state("");
 
+    // cytoscape variable should never change
+    // svelte-ignore state_referenced_locally
     cy.on("tap", (ev) => {
         // WebGL does not properly output nodes, therefore slowly find the correct node
         const node = Array.from(cy.nodes()).find(node => {

@@ -13,7 +13,7 @@
 
     let loading: boolean = $state(true);
     let cyContainer: HTMLElement;
-    // @ts-ignore cy is always set, ignore undefined
+    // @ts-expect-error cy is always set, ignore undefined
     let cy: cytoscape.Core = $state();
 
     let derivedSpec: AggregationSpec = $derived({

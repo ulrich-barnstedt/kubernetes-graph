@@ -12,6 +12,8 @@
     const {children, borderDirection, ...rest} : Props = $props();
 
     const styleString = [
+        // state updates are ignored as it would require the style string to be regenerated
+        // svelte-ignore state_referenced_locally
         ...Object.entries(rest).map(([k, v]) => `${k}: ${v}`)
     ].join(";") + ";";
 </script>
