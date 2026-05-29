@@ -6,7 +6,16 @@ class INTERNAL_ERROR {
     public metadata: Record<string, any>;
 
     constructor (error: any) {
-        this.error = error;
+        this.error = {...error};
+        if ("body" in this.error) {
+            try {
+                this.error.body = JSON.parse(this.error.body);
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            } catch (e) {
+                // not json
+            }
+        }
+
         this.metadata = {
             uid: "no-uid",
             name: "INTERNAL ERROR"
