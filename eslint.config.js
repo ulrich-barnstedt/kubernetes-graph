@@ -1,17 +1,18 @@
 import js from '@eslint/js';
-import { includeIgnoreFile } from '@eslint/compat';
 import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript-eslint';
 import svelteConfig from './svelte.config.js';
+import {includeIgnoreFile} from "@eslint/compat";
+
 const gitignorePath = fileURLToPath(new URL("./.gitignore", import.meta.url));
 
 export default ts.config(
     includeIgnoreFile(gitignorePath),
     js.configs.recommended,
-    ...ts.configs.recommended,
-    ...svelte.configs.recommended,
+    ts.configs.recommended,
+    svelte.configs.recommended,
     {
         languageOptions: {
             globals: {
@@ -31,6 +32,11 @@ export default ts.config(
                 parser: ts.parser,
                 svelteConfig
             }
+        }
+    },
+    {
+        rules: {
+            "@typescript-eslint/no-explicit-any": "off"
         }
     }
 );
